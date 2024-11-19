@@ -12,8 +12,13 @@ function Homepage() {
   const [value, setValue] = useState('');
   const [loading, setLoading] = useState(true); // Per gestire il loading
   const [error, setError] = useState(null); 
-  const token = localStorage.getItem('authToken');
   const [open, setOpen] = React.useState(false);
+  const [argomento, setArgomento] = useState(null);
+
+  const token = localStorage.getItem('authToken');
+  const argomentoId = 103;
+
+
   localStorage.setItem("naviBottom", 0);
 
   let navigate = useNavigate();
@@ -45,19 +50,18 @@ function Homepage() {
 
     try {
       const response = await fetch('http://localhost:3001/argomento/103', {
-        method: 'PUT', // Metodo PUT per aggiornare
+        method: 'PUT',
         headers: {
-          'Content-Type': 'application/json', // Tipo di contenuto JSON
-          'Authorization': `Bearer ${token}`, // Bearer Token per l'autenticazione
+          'Content-Type': 'application/json', 
+          'Authorization': `Bearer ${token}`, 
         },
         body: JSON.stringify({
-          titolo: 'Introduzione alla programmazione', // Titolo (puoi modificarlo come necessario)
-          contenuto: value, // Contenuto che viene scritto nell'editor
-          id_corso: 52, // ID del corso
+          titolo: 'Introduzione alla programmazione', 
+          contenuto: value, 
+          id_corso: 52, 
         }),
       });
 
-      // Gestione della risposta
       if (response.ok) {
         const data = await response.json();
         console.log('Dati salvati:', data);
@@ -71,6 +75,42 @@ function Homepage() {
       alert('Errore nel salvataggio del contenuto');
     }
   };
+
+    // Funzione per la GET request
+    const fetchArgomento = async (id) => {
+      if (!token) {
+        alert('Token non trovato');
+        return;
+      }
+  
+      try {
+        const response = await fetch(`http://localhost:3001/argomento/${id}`, {
+          method: 'GET', // Metodo GET per recuperare
+          headers: {
+            'Authorization': `Bearer ${token}`, // Bearer Token per l'autenticazione
+            'Content-Type': 'application/json', // Tipo di contenuto JSON
+          },
+        });
+  
+        // Gestione della risposta
+        if (response.ok) {
+          const data = await response.json();
+          setArgomento(data); // Imposta i dati nell'argomento
+          setValue(data.contenuto); // Imposta il contenuto nel value per l'editor
+          setLoading(false); // Imposta lo stato di loading a false
+        } else {
+          throw new Error('Errore nel recupero dei dati');
+        }
+      } catch (err) {
+        console.error('Errore:', err);
+        setError(err.message); // Mostra l'errore
+        setLoading(false); // Imposta lo stato di loading a false
+      }
+    };
+
+    useEffect(() => {
+      fetchArgomento(argomentoId); // Passa l'ID dell'argomento
+    }, [argomentoId]);
 
   return (
     <>
