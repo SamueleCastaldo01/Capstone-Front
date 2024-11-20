@@ -30,7 +30,7 @@ import { useLocation } from 'react-router-dom';
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 
-const drawerWidth = 240;
+const drawerWidth = 400;
 
 const openedMixin = (theme) => ({
   width: drawerWidth,
@@ -42,15 +42,12 @@ const openedMixin = (theme) => ({
 });
 
 const closedMixin = (theme) => ({
+  width: 0,
   transition: theme.transitions.create('width', {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
   overflowX: 'hidden',
-  width: `calc(${theme.spacing(7)} + 1px)`,
-  [theme.breakpoints.up('sm')]: {
-    width: `calc(${theme.spacing(8)} + 1px)`,
-  },
 });
 
 const DrawerHeader = styled('div')(({ theme }) => ({
@@ -89,7 +86,6 @@ const AppBar = styled(MuiAppBar, {
 
 const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
   ({ theme, open }) => ({
-    width: drawerWidth,
     flexShrink: 0,
     whiteSpace: 'nowrap',
     boxSizing: 'border-box',
@@ -100,18 +96,29 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
       ...openedMixin(theme),
       '& .MuiDrawer-paper': {
         ...openedMixin(theme),
-        backgroundColor: colorBack, // Assicura che la carta del drawer abbia lo stesso colore
+        backgroundColor: colorBack, 
       },
     }),
     ...(!open && {
       ...closedMixin(theme),
       '& .MuiDrawer-paper': {
         ...closedMixin(theme),
-        backgroundColor: colorBack, // Assicura che la carta del drawer abbia lo stesso colore
+        backgroundColor: colorBack,
       },
     }),
   })
 );
+
+
+const ListItemCus = styled(ListItem)({
+  padding: '10px 24px', 
+  fontSize: '1.2rem',    
+  
+});
+
+const ListItemTextCus = styled(ListItemText)({
+
+});
 
 
 //--------------------------------------------------------------------------------
@@ -311,7 +318,7 @@ useEffect(() => {
   return (
     <Box sx={{ display: 'flex'}}>
       <CssBaseline />
-      <AppBar position="fixed" elevation={10} open={open} color='secondary'>
+      <AppBar position="fixed" elevation={0} open={open} color='secondary'>
         <Toolbar>
           <IconButton
             color="black"
@@ -326,7 +333,6 @@ useEffect(() => {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            
           </Typography>
 
 
@@ -357,7 +363,7 @@ useEffect(() => {
               >
                 {notiMessPA && <MenuItem onClick={handleCloseNoty}>Pa è stato modificato</MenuItem>}
                 
-              </Menu>
+          </Menu>
               </>
      
         </div>
@@ -416,7 +422,7 @@ useEffect(() => {
         <Divider />
         <List>
 
-        <ListItem  disablePadding sx={{ display: 'block' }} onClick={() => {navigate("/")}}>
+        <ListItemCus  disablePadding sx={{ display: 'block' }} onClick={() => {navigate("/")}}>
               <ListItemButton
               
           selected={selectedItem === "homepage"}
@@ -424,7 +430,7 @@ useEffect(() => {
      
                 <ListItemText primary="HomePage" sx={{ opacity: open ? 1 : 0 }} />
               </ListItemButton>
-        </ListItem>
+        </ListItemCus>
 
 
         {/*******Corsi e argomenti */}
@@ -434,9 +440,9 @@ useEffect(() => {
           const isLoading = loading[corso.id]; // Stato di caricamento
 
           return (
-            <ListItem key={corso.id} disablePadding sx={{ display: "block" }}>
+            <ListItemCus key={corso.id} disablePadding sx={{ display: "block" }}>
               <ListItemButton onClick={() => handleToggle(corso.id)}>
-                <ListItemText primary={corso.nomeCorso} sx={{ opacity: 1 }} />
+                <ListItemText primary={corso.nomeCorso} primaryTypographyProps={{fontSize: '20px'}}  sx={{ opacity: 1 }}  />
                 {isOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}
               </ListItemButton>
               <Collapse in={isOpen} timeout="auto" unmountOnExit>
@@ -446,7 +452,7 @@ useEffect(() => {
                   )  : corsoArgomenti.length > 0 ? (
                     corsoArgomenti.map((argomento) => (
                       <ListItem key={argomento.id} sx={{ pl: 4 }}>
-                        <ListItemText primary={argomento.titolo} />
+                        <ListItemText primary={argomento.titolo} primaryTypographyProps={{fontSize: '17px'}}/>
                       </ListItem>
                     ))
                   ) : (
@@ -454,7 +460,7 @@ useEffect(() => {
                   )}
                 </List>
               </Collapse>
-            </ListItem>
+            </ListItemCus>
           );
         })}
 
