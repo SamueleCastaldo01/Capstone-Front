@@ -43,11 +43,6 @@ function Homepage() {
   };
 
   const handleSave = async () => {
-    if (!token) {
-      alert('Token non trovato');
-      return;
-    }
-
     try {
       const response = await fetch('http://localhost:3001/argomento/103', {
         method: 'PUT',
@@ -77,12 +72,7 @@ function Homepage() {
   };
 
     // Funzione per la GET request
-    const fetchArgomento = async (id) => {
-      if (!token) {
-        alert('Token non trovato');
-        return;
-      }
-  
+    const fetchArgomento = async (id) => {  
       try {
         const response = await fetch(`http://localhost:3001/argomento/${id}`, {
           method: 'GET', // Metodo GET per recuperare

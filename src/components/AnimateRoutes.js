@@ -26,7 +26,6 @@ function AnimateRoutes ()  {
     const location = useLocation();
     //const [isAuth, setIsAuth] = useState(localStorage.getItem("isAuth"));
     const isAuth = useSelector((state) => state.auth.isAuth);
-    console.log("isAuth state:", isAuth);
     const timeElapsed = Date.now();  //prende la data attuale in millisecondi
     const today = new Date(timeElapsed);    //converte nel tipo data
     var formattedDate = moment(today).format('DD-MM-YYYY');  //coverte nel formato richiesto

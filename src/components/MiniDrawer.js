@@ -1,46 +1,34 @@
 import * as React from 'react';
 import { doc,  updateDoc} from 'firebase/firestore';
 import { auth, db } from "../firebase-config";
-import { supa } from '../components/utenti';
-import { tutti } from '../components/utenti';
 import { styled, useTheme } from '@mui/material/styles';
-import PeopleIcon from '@mui/icons-material/People';
-import ViewListIcon from '@mui/icons-material/ViewList';
 import Box from '@mui/material/Box';
 import Badge from '@mui/material/Badge';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import TaskIcon from '@mui/icons-material/Task';
-import PostAddIcon from '@mui/icons-material/PostAdd';
 import MuiDrawer from '@mui/material/Drawer';
 import MuiAppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
+import { CircularProgress } from '@mui/material';
 import List from '@mui/material/List';
 import CssBaseline from '@mui/material/CssBaseline';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
-import NoteAltIcon from '@mui/icons-material/NoteAlt';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import PersonAddIcon from '@mui/icons-material/PersonAdd';
-import HomeIcon from '@mui/icons-material/Home';
 import ListItemText from '@mui/material/ListItemText';
-import NoteAddIcon from '@mui/icons-material/NoteAdd';
-import ContactPageIcon from '@mui/icons-material/ContactPage';
-import InvertColorsIcon from '@mui/icons-material/InvertColors';
 import { useNavigate } from 'react-router-dom';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import Avatar from '@mui/material/Avatar';
 import { useState, useEffect } from 'react';
-import ExpandLess from '@mui/icons-material/ExpandLess';
-import ExpandMore from '@mui/icons-material/ExpandMore';
 import Collapse from '@mui/material/Collapse';
 import { useLocation } from 'react-router-dom'; 
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 
 const drawerWidth = 240;
 
@@ -125,89 +113,35 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
   })
 );
 
+
+//--------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------
 export default function MiniDrawer( {signUserOut} ) {
 
-  const [todoNoti, setTodoNoti] = React.useState([]);  //array notifica
-  const [notiPa, setNotiPa] = React.useState("");  //flag per comparire la notifica dot
-  const [notiMessPA, setNotiMessPA] = React.useState(false);  //flag per far comparire il messaggio
-  const [anchorElNoty, setAnchorElNoty] = React.useState(null);
-  const [notiPaId, setNotiPaId] = React.useState("7k5cx6hwSnQTCvWGVJ2z");  //id NotificapPa per modificare all'interno del database
+  const [notiPa, setNotiPa] = useState("");  //flag per comparire la notifica dot
+  const [notiMessPA, setNotiMessPA] = useState(false);  //flag per far comparire il messaggio
+  const [anchorElNoty, setAnchorElNoty] = useState(null);
+  const [notiPaId, setNotiPaId] = useState("7k5cx6hwSnQTCvWGVJ2z"); 
 
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [corsi, setCorsi] = useState([]); 
+  const [argomenti, setArgomenti] = useState({});
+  const [loadingcorsi, setLoadingcorsi] = useState(true); 
+  const token = localStorage.getItem('authToken');
+  const [openState, setOpenState] = useState({});
+  const [loading, setLoading] = useState({});
+
+  const [anchorEl, setAnchorEl] = useState(null);
   const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const navigate = useNavigate();
-  const [isAuth, setIsAuth] = React.useState(localStorage.getItem("isAuth"))
-  const [selectedIndex, setSelectedIndex] = React.useState(1);
+  const [isAuth, setIsAuth] = useState(localStorage.getItem("isAuth"))
+  const [selectedIndex, setSelectedIndex] = useState(1);
   const [selectedItem, setSelectedItem] = useState('');
 
-  //Open sottocategorie
-  const [openSottocategoria, setOpenSottocategoria] = React.useState(false);
-  const [openSottocategoriaProd, setOpenSottocategoriaProd] = React.useState(false);
-  const [openSottocategoriaOrd, setOpenSottocategoriaOrd] = React.useState(false);
-  const [openSottocategoriaForn, setOpenSottocategoriaForn] = React.useState(false);
 
   //permessi utente
-  let sup= supa.includes(localStorage.getItem("uid"))
-  let ta= tutti.includes(localStorage.getItem("uid"))  //se trova id esatto nell'array rispetto a quello corrente, ritorna true
-
   const location= useLocation();
-
-//sottocategorie Clienti
-  const handleClickSottoCategoria = () => {
-    setOpenSottocategoria(!openSottocategoria);
-  };
-  const handleMouseEnter = () => {
-    setOpenSottocategoria(true);
-    setOpenSottocategoriaProd(false);
-    setOpenSottocategoriaOrd(false);
-  };
-  const handleMouseLeave = () => {
-    setOpenSottocategoria(false);
-  };
-
-  //Sottocategorie Prodotti
-  const handleClickSottoCategoriaProd = () => {
-    setOpenSottocategoriaProd(!openSottocategoriaProd);
-  };
-  const handleMouseEnterProd = () => {
-    setOpenSottocategoriaProd(true);
-    setOpenSottocategoria(false);
-    setOpenSottocategoriaOrd(false);
-    setOpenSottocategoriaForn(false);
-  };
-  const handleMouseLeaveProd = () => {
-    setOpenSottocategoriaProd(false);
-  };
-
-    //Sottocategorie Ordini
-    const handleClickSottoCategoriaOrd = () => {
-      setOpenSottocategoriaOrd(!openSottocategoriaOrd);
-    };
-    const handleMouseEnterOrd = () => {
-      setOpenSottocategoriaOrd(true);
-      setOpenSottocategoria(false);
-      setOpenSottocategoriaProd(false)
-      setOpenSottocategoriaForn(false);
-    };
-    const handleMouseLeaveOrd = () => {
-      setOpenSottocategoriaOrd(false);
-    };
-
-     //Sottocategorie Fornitori
-     const handleClickSottoCategoriaForn = () => {
-      setOpenSottocategoriaForn(!openSottocategoriaForn);
-    };
-    const handleMouseEnterForn = () => {
-      setOpenSottocategoriaForn(true);
-      setOpenSottocategoria(false);
-      setOpenSottocategoriaProd(false)
-      setOpenSottocategoriaOrd(false)
-    };
-    const handleMouseLeaveForn = () => {
-      setOpenSottocategoriaForn(false);
-    };   
-
 
   const handleListItemClick = (event, index) => {
     setSelectedIndex(index);
@@ -240,6 +174,86 @@ export default function MiniDrawer( {signUserOut} ) {
   const handleDrawerClose = () => {
     setOpen(false);
   };
+
+
+  const fetchCorso = async (id) => {  
+      try {
+        const response = await fetch(`http://localhost:3001/corso/me`, {
+          method: 'GET', 
+          headers: {
+            'Authorization': `Bearer ${token}`, 
+            'Content-Type': 'application/json',
+          },
+        });
+
+        // Gestione della risposta
+        if (response.ok) {
+          const data = await response.json();
+          setCorsi(data);
+          setLoadingcorsi(false); 
+        } else {
+          throw new Error('Errore nel recupero dei dati');
+        }
+      } catch (err) {
+        console.error('Errore:', err);
+        setLoadingcorsi(false); 
+    };
+  }
+
+  const handleToggle = async (idCorso) => {
+    // Inverti lo stato di apertura
+    setOpenState((prev) => ({
+      ...prev,
+      [idCorso]: !prev[idCorso], // Inverti lo stato di apertura per questo corso
+    }));
+  
+    // Fetch argomenti solo se non sono già stati caricati
+    if (!argomenti[idCorso] && !loading[idCorso]) {
+      setLoading((prev) => ({ ...prev, [idCorso]: true })); // Imposta lo stato di caricamento a true
+  
+      try {
+        // Fetch degli argomenti per il corso
+        const data = await fetchArgomentiPerCorso(idCorso); // supponiamo che questa funzione ritorni i dati
+        if (data) {
+          // Salva gli argomenti solo se i dati esistono
+          setArgomenti((prev) => ({
+            ...prev,
+            [idCorso]: data, // Salva gli argomenti per il corso
+          }));
+        }
+      } catch (err) {
+        console.error(`Errore nel caricamento degli argomenti per il corso ${idCorso}`, err);
+      } finally {
+        setLoading((prev) => ({ ...prev, [idCorso]: false })); // Fine del caricamento
+      }
+    }
+  };
+
+  const fetchArgomentiPerCorso = async (idCorso) => {
+    if (argomenti[idCorso]) return; // Se già caricato, non fa la fetch di nuovo
+    try {
+      const response = await fetch(`http://localhost:3001/argomento/corso/${idCorso}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`, 
+          'Content-Type': 'application/json',
+        },
+      });
+      const data = await response.json();
+      setArgomenti((prev) => ({ ...prev, [idCorso]: data }));
+
+
+    } catch (err) {
+
+    }
+  };
+
+  useEffect(() => {
+    console.log(argomenti)
+  }, [argomenti]);
+
+useEffect(() => {
+  fetchCorso()
+},[])
 
 
 //***********USE EFFECT*********************************************** */
@@ -321,7 +335,6 @@ export default function MiniDrawer( {signUserOut} ) {
 
 
         <div>
-        {sup &&
         <>
           <Badge color="error" variant={notiPa} style={{ marginRight: "20px" }}>
             <NotificationsIcon onClick={handleMenuNoty} style={{color: "black"}}/>
@@ -350,7 +363,7 @@ export default function MiniDrawer( {signUserOut} ) {
                 
               </Menu>
               </>
-            }
+     
         </div>
    
 
@@ -412,60 +425,42 @@ export default function MiniDrawer( {signUserOut} ) {
               
           selected={selectedItem === "homepage"}
           onClick={(event) => handleListItemClick(event, 7)}>
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : 'auto',
-                    justifyContent: 'center',
-                  }}
-                >
-                  <HomeIcon  sx={{ color: "white" }} />
-                </ListItemIcon>
+     
                 <ListItemText primary="HomePage" sx={{ opacity: open ? 1 : 0 }} />
               </ListItemButton>
-          </ListItem>
+        </ListItem>
 
 
+        {/*******Corsi e argomenti */}
+        {corsi.map((corso) => {
+          const corsoArgomenti = argomenti[corso.id] || []; // Argomenti per il corso corrente
+          const isOpen = openState[corso.id] || false; // Controlla se il corso è aperto
+          const isLoading = loading[corso.id]; // Stato di caricamento
 
-
-
-    {/** 
-      <div >
-      <ListItem  disablePadding sx={{ display: 'block', backgroundColor: openSottocategoriaOrd ? 'white' : 'initial' }}>
-      <ListItemButton onMouseEnter={handleMouseEnterOrd }  onClick={handleClickSottoCategoriaOrd}  >
-        <ListItemIcon>
-          <ViewListIcon sx={{ color: openSottocategoriaOrd ?  "black" : "white" }} />
-        </ListItemIcon>
-        <ListItemText sx={{ color: openSottocategoriaOrd ? 'black' : 'white' }} primary="Fatture Clienti" />
-        {openSottocategoriaOrd ? <ExpandLess sx={{ color: 'black' }} /> : <ExpandMore />}
-      </ListItemButton>
-      </ListItem>
-      <Collapse in={openSottocategoriaOrd} timeout="auto" unmountOnExit>
-        <List component="div" disablePadding>
-            <ListItem  disablePadding sx={{ display: 'block' }} onClick={() => {navigate("/listafatture")}}>
-                <ListItemButton sx={{ pl: 4 }}
-                    selected={selectedItem === "listafatture"}
-                  onClick={(event) => handleListItemClick(event, 9)}>
-                  <ListItemIcon sx={{ minWidth: 0,mr: open ? 3 : 'auto'}}>
-                    <TaskIcon sx={{ color: "white" }}/>
-                  </ListItemIcon>
-                  <ListItemText primary="Fatture" sx={{ opacity: open ? 1 : 0 }} />
-                </ListItemButton>
+          return (
+            <ListItem key={corso.id} disablePadding sx={{ display: "block" }}>
+              <ListItemButton onClick={() => handleToggle(corso.id)}>
+                <ListItemText primary={corso.nomeCorso} sx={{ opacity: 1 }} />
+                {isOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+              </ListItemButton>
+              <Collapse in={isOpen} timeout="auto" unmountOnExit>
+                <List component="div" disablePadding sx={{ pl: 4 }}>
+                  {isLoading ? (
+                    <CircularProgress size={24} /> // Mostra un caricamento
+                  )  : corsoArgomenti.length > 0 ? (
+                    corsoArgomenti.map((argomento) => (
+                      <ListItem key={argomento.id} sx={{ pl: 4 }}>
+                        <ListItemText primary={argomento.titolo} />
+                      </ListItem>
+                    ))
+                  ) : (
+                    <ListItemText primary="Nessun argomento trovato." />
+                  )}
+                </List>
+              </Collapse>
             </ListItem>
-            <ListItem  disablePadding sx={{ display: 'block' }} onClick={() => {navigate("/aggiungifatture")}}>
-                <ListItemButton sx={{ pl: 4 }}
-                    selected={selectedItem === "aggiungifatture"}
-                  onClick={(event) => handleListItemClick(event, 10)}>
-                  <ListItemIcon sx={{ minWidth: 0,mr: open ? 3 : 'auto'}}>
-                    <PostAddIcon sx={{ color: "white" }}/>
-                  </ListItemIcon>
-                  <ListItemText primary="Aggiungi Fatture" sx={{ opacity: open ? 1 : 0 }} />
-                </ListItemButton>
-            </ListItem>
-        </List>
-      </Collapse>
-      </div>
-      */}
+          );
+        })}
 
 
         </List>
