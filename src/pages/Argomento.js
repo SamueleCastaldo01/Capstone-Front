@@ -40,13 +40,20 @@ function Argomento() {
 
   const modules = {
     toolbar: [
-      [{ header: [1, 2, 3, false] }], // Opzioni per titoli
-      ['bold', 'italic', 'underline'], 
-      [{ color: [] }, { background: [] }], 
-      ['link', 'image'], 
-      [{ align: [] }], 
-      ['clean'], 
+      [{ 'header': '1' }, { 'header': '2' }, { 'font': [] }], // Header
+      [{ 'size': ['small', false, 'large', 'huge'] }], // Dimensioni del testo
+      ['bold', 'italic', 'underline', 'strike'], // Formattazioni del testo
+      [{ 'list': 'ordered'}, { 'list': 'bullet' }], // Liste numerate e puntate
+      [{ 'align': [] }], // Allineamento
+      [{ 'color': [] }, { 'background': [] }], // Colore del testo e dello sfondo
+      ['link', 'image', 'video'], // Link, immagini, video
+      ['blockquote'], // Citazioni in blocco
+      ['code-block'], // Blocchi di codice
+      ['clean'], // Pulisce la formattazione
     ],
+    clipboard: {
+      matchVisual: false, // Gestisce la copia/incolla
+    },
   };
 
   const handleSave = async () => {
@@ -123,7 +130,7 @@ function Argomento() {
         <div className='px-4 pt-3 px-lg-0 divPrincipale'>
             <h5 className='mb-0'>{nomeCorso}</h5>
             <div className='d-flex align-items-center'>
-                <input style={{border: "none", fontSize: "34px", width: "70%"}} value={titoloArgomento} onChange={(event) => setTitoloArgomento(event.target.value)} />
+                <input style={{border: "none", fontSize: "40px", fontWeight:"bolder", width: "70%"}} value={titoloArgomento} onChange={(event) => setTitoloArgomento(event.target.value)} />
                 <Button variant="contained" color="success" onClick={handleSave}>
                     Salva
                 </Button>
