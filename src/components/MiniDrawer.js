@@ -201,30 +201,26 @@ export default function MiniDrawer( {signUserOut} ) {
   }
 
   const handleToggle = async (idCorso) => {
-    // Inverti lo stato di apertura
     setOpenState((prev) => ({
       ...prev,
-      [idCorso]: !prev[idCorso], // Inverti lo stato di apertura per questo corso
+      [idCorso]: !prev[idCorso],
     }));
   
-    // Fetch argomenti solo se non sono già stati caricati
     if (!argomenti[idCorso] && !loading[idCorso]) {
-      setLoading((prev) => ({ ...prev, [idCorso]: true })); // Imposta lo stato di caricamento a true
+      setLoading((prev) => ({ ...prev, [idCorso]: true })); 
   
       try {
-        // Fetch degli argomenti per il corso
-        const data = await fetchArgomentiPerCorso(idCorso); // supponiamo che questa funzione ritorni i dati
+        const data = await fetchArgomentiPerCorso(idCorso);
         if (data) {
-          // Salva gli argomenti solo se i dati esistono
           setArgomenti((prev) => ({
             ...prev,
-            [idCorso]: data, // Salva gli argomenti per il corso
+            [idCorso]: data,
           }));
         }
       } catch (err) {
         console.error(`Errore nel caricamento degli argomenti per il corso ${idCorso}`, err);
       } finally {
-        setLoading((prev) => ({ ...prev, [idCorso]: false })); // Fine del caricamento
+        setLoading((prev) => ({ ...prev, [idCorso]: false }));
       }
     }
   };
