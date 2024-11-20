@@ -23,24 +23,8 @@ function Homepage() {
 
   let navigate = useNavigate();
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
 
-  const handleClose = () => {
-    setOpen(false);
-  };
 
-  const modules = {
-    toolbar: [
-      [{ header: [1, 2, 3, false] }], // Opzioni per titoli
-      ['bold', 'italic', 'underline'], 
-      [{ color: [] }, { background: [] }], 
-      ['link', 'image'], 
-      [{ align: [] }], 
-      ['clean'], 
-    ],
-  };
 
   const handleSave = async () => {
     try {
@@ -111,26 +95,15 @@ function Homepage() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.7 }}>
-        <div className='px-4 px-lg-0 divPrincipale'>
-          <h1 className='titlePage'>Flash Card</h1>
-          <div className='mt-4 d-flex flex-column gap-3 justify-content-start'>
-          <ReactQuill
-            theme="snow"
-            value={value}
-            onChange={setValue}
-            modules={modules}
-          />
 
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleSave}
-            style={{ width: '80%', height: '50px', marginBottom: '20px' }}
-          >
-            Salva Contenuto
-          </Button>
+        <div style={{height: "70vh"}} className='px-4 px-lg-0 text-center d-flex flex-column justify-content-center'>
 
-          </div>
+            <div className='addAppunti' onClick={() => {navigate("/addcorso")}}>
+              <h2>Aggiungi Appunti</h2>
+              <div style={{paddingTop: "120px"}}>
+                <h2 style={{fontSize: "100px"}}>+</h2>
+              </div>
+            </div>
 
         </div>
 

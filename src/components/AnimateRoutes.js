@@ -12,6 +12,7 @@ import 'moment/locale/it'
 import Register from '../pages/Register';
 import { MyAccount } from '../pages/MyAccount';
 import Argomento from '../pages/Argomento';
+import AddCorso from '../pages/AddCorso';
 
 
 function AnimateRoutes ()  {
@@ -41,6 +42,7 @@ return (
       <Route path="/" element={<Homepage />} /> 
       <Route path="/argomento/:id" element={<Argomento />} /> 
       <Route path="/myaccount" element={<MyAccount />} /> 
+      <Route path="/addCorso" element={<AddCorso />} /> 
       
 
 

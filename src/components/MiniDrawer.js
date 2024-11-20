@@ -61,12 +61,14 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 
 //serve per cambiare il colore del background della navbar
 const colorBack = "#F1F1F1"
+const colorAppBar = "#771AA9"
+const colorIcon = "white"
 
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== 'open',
 })(({ theme, open }) => ({
   zIndex: theme.zIndex.drawer + 1,
-  backgroundColor: colorBack,
+  backgroundColor: colorAppBar,
   color: 'black', 
   boxShadow: "none",
   boxShadow: "0px 2px 0px rgba(0, 0, 0, 0.2)",
@@ -140,6 +142,7 @@ export default function MiniDrawer( {signUserOut} ) {
 
   const location= useLocation();
   const currentArgomentoId = location.pathname.split('/').pop();
+  const isHomeActive = location.pathname === "/";
 
   const [anchorEl, setAnchorEl] = useState(null);
   const theme = useTheme();
@@ -274,33 +277,7 @@ useEffect(() => {
 },[])
 
 
-//***********USE EFFECT*********************************************** */
-  useEffect(() => {
-    // Ascolta i cambiamenti nell'URL e imposta l'elemento selezionato in base all'URL
-    switch (location.pathname) {       
-      case '/customerlist':
-          setSelectedItem('customerlist');
-        break;
-      case '/dashclienti':
-          setSelectedItem('customerlist');
-        break;
-        case '/addcustomer':
-          setSelectedItem('addcustomer');
-        break;
-      case '/aggiungifatture':
-        setSelectedItem('aggiungifatture');
-        break;
-      case '/listafatture':
-        setSelectedItem('listafatture');
-        break;
-      case '/nota':
-        setSelectedItem('ordineclientidata');
-        break;
-      default:
-        setSelectedItem('homepage');
-        break;
-    }
-  }, [location.pathname]);
+
 //________________________________________________________________________________________
     //Notifiche
     {/** 
@@ -336,25 +313,32 @@ useEffect(() => {
       <AppBar position="fixed" elevation={0} open={open} color='secondary'>
         <Toolbar>
           <IconButton
-            color="black"
             aria-label="open drawer"
             onClick={handleDrawerOpen}
             edge="start"
             sx={{
-              marginRight: 5,
+              marginRight: 2,
               ...(open && { display: 'none' }),
             }}
           >
-            <MenuIcon />
+            <MenuIcon sx={{color: colorIcon}}/>
           </IconButton>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-          </Typography>
+     
 
+        <div className='text-white d-flex gap-4'>
+          <p className={`mb-0 navLink ${isHomeActive ? 'active' : ''}`} onClick={() => navigate("/")}>Home</p>
+          <p className='mb-0 navLink'>Flash Card</p>
+          <p className='mb-0 navLink'>Tecnica Del Pomodoro</p>
+          <p className='mb-0 navLink'>Mappa Concettuale</p>
+        </div>
+
+        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+        </Typography>
 
         <div>
         <>
           <Badge color="error" variant={notiPa} style={{ marginRight: "20px" }}>
-            <NotificationsIcon onClick={handleMenuNoty} style={{color: "black"}}/>
+            <NotificationsIcon onClick={handleMenuNoty} style={{color: colorIcon}}/>
           </Badge>
           <Menu  sx={
         { mt: "1px", "& .MuiMenu-paper": 
@@ -425,12 +409,12 @@ useEffect(() => {
     }
   }}
       >
-          <DrawerHeader sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', padding: '0 8px' }}>
+          <DrawerHeader sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', padding: '0 8px', backgroundColor: colorAppBar }}>
           <IconButton onClick={handleDrawerClose} >
-           <ChevronLeftIcon sx={{ fontSize: '2rem'}}/>
+           <ChevronLeftIcon sx={{ fontSize: '2rem', color: colorIcon}}/>
           </IconButton>
-          <div className='d-flex align-items-center gap-3'> 
-            <h4 className='mb-0'>Corsi</h4>
+          <div className='d-flex align-items-center gap-3 text-white'> 
+            <h5 className='mb-0'>Corsi</h5>
           </div>
         </DrawerHeader>
         <Divider />
