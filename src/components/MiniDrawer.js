@@ -138,9 +138,12 @@ export default function MiniDrawer( {signUserOut} ) {
   const [openState, setOpenState] = useState({});
   const [loading, setLoading] = useState({});
 
+  const location= useLocation();
+  const currentArgomentoId = location.pathname.split('/').pop();
+
   const [anchorEl, setAnchorEl] = useState(null);
   const theme = useTheme();
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
   const navigate = useNavigate();
   const [isAuth, setIsAuth] = useState(localStorage.getItem("isAuth"))
   const [selectedIndex, setSelectedIndex] = useState(1);
@@ -148,7 +151,7 @@ export default function MiniDrawer( {signUserOut} ) {
 
 
   //permessi utente
-  const location= useLocation();
+  
 
   const handleListItemClick = (event, index) => {
     setSelectedIndex(index);
@@ -233,7 +236,6 @@ export default function MiniDrawer( {signUserOut} ) {
   };
 
   const fetchArgomentiPerCorso = async (idCorso) => {
-    if (argomenti[idCorso]) return; // Se già caricato, non fa la fetch di nuovo
     try {
       const response = await fetch(`http://localhost:3001/argomento/corso/${idCorso}`, {
         headers: {
@@ -250,9 +252,22 @@ export default function MiniDrawer( {signUserOut} ) {
     }
   };
 
-  useEffect(() => {
-    console.log(argomenti)
-  }, [argomenti]);
+  const updateArgomentiPerCorso = async (idCorso) => {
+    try {
+      console.log("sono entrato")
+      const response = await fetch(`http://localhost:3001/argomento/corso/${idCorso}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`, 
+          'Content-Type': 'application/json',
+        },
+      });
+      const data = await response.json();
+      setArgomenti((prev) => ({ ...prev, [idCorso]: data }));
+    } catch (err) {
+
+    }
+  };
+
 
 useEffect(() => {
   fetchCorso()
@@ -422,38 +437,57 @@ useEffect(() => {
 
         <List sx={{padding: "0px"}}>
   
+
+
         {/*******Corsi e argomenti */}
         {corsi.map((corso) => {
-          const corsoArgomenti = argomenti[corso.id] || []; // Argomenti per il corso corrente
-          const isOpen = openState[corso.id] || false; // Controlla se il corso è aperto
-          const isLoading = loading[corso.id]; // Stato di caricamento
+        const corsoArgomenti = argomenti[corso.id] || [];
+        const isOpen = openState[corso.id] || false; 
+        const isLoading = loading[corso.id]; 
 
-          return (
-            <ListItemCus key={corso.id} disablePadding sx={{ display: "block" }}>
-              <ListItemButton style={{borderRadius: "10px"}} onClick={() => handleToggle(corso.id)}>
-                <ListItemText primary={corso.nomeCorso} primaryTypographyProps={{fontSize: '20px'}}  sx={{ opacity: 1 }}  />
-                {isOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-              </ListItemButton>
-              <Collapse in={isOpen} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding sx={{ pl: 4 }}>
-                  {isLoading ? (
-                    <CircularProgress size={24} /> // Mostra un caricamento
-                  )  : corsoArgomenti.length > 0 ? (
-                    corsoArgomenti.map((argomento) => (
-                      <ListItem key={argomento.id} style={{padding: "8px 0px" }}>
-                        <ListItemButton style={{borderRadius: "10px"}} onClick={() => handleToggle(corso.id)}>
-                          <ListItemText primary={argomento.titolo} primaryTypographyProps={{fontSize: '18px'}}/>
+        return (
+          <ListItemCus key={corso.id} disablePadding sx={{ display: "block" }}>
+            <ListItemButton style={{ borderRadius: "10px" }} onClick={() => handleToggle(corso.id)}>
+              <ListItemText
+                primary={corso.nomeCorso}
+                primaryTypographyProps={{ fontSize: '20px' }}
+                sx={{ opacity: 1 }}
+              />
+              {isOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+            </ListItemButton>
+            <Collapse in={isOpen} timeout="auto" unmountOnExit>
+              <List component="div" disablePadding sx={{ pl: 4 }}>
+                {isLoading ? (
+                  <CircularProgress size={24} /> // Mostra un caricamento
+                ) : corsoArgomenti.length > 0 ? (
+                  corsoArgomenti.map((argomento) => {
+                   
+                    const isSelected = argomento.id.toString() === currentArgomentoId; 
+                    return (
+                      <ListItem key={argomento.id} style={{padding: "2px 0px"}}>
+                        <ListItemButton
+                          style={{ borderRadius: "10px", backgroundColor: isSelected ? '#E7E7E7' : 'transparent' }}
+                          onClick={() => { navigate(`/argomento/${argomento.id}`); }} // Naviga all'argomento selezionato
+                        >
+                          <ListItemText
+                            primary={argomento.titolo}
+                            primaryTypographyProps={{
+                              fontSize: '18px',
+                              fontWeight: isSelected ? 'bold' : 'normal', // Grassetto se selezionato
+                            }}
+                          />
                         </ListItemButton>
                       </ListItem>
-                    ))
-                  ) : (
-                    <ListItemText primary="Nessun argomento trovato." />
-                  )}
-                </List>
-              </Collapse>
-            </ListItemCus>
-          );
-        })}
+                    );
+                  })
+                ) : (
+                  <ListItemText primary="Nessun argomento trovato." />
+                )}
+              </List>
+            </Collapse>
+          </ListItemCus>
+        );
+      })}
 
 
         </List>

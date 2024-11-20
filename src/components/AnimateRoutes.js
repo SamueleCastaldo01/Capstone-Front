@@ -3,20 +3,15 @@ import { useState, useEffect } from "react";
 import Homepage from '../pages/Homepage'
 import { useSelector } from 'react-redux'; 
 import Login from '../pages/Login';
-import { CustomerList } from '../pages/CustomerList';
 import Page_per from '../pages/Page_per';
 import { BrowserRouter as Router, Routes, Route, Link, useLocation} from "react-router-dom";
 import {PrivateRoutes, PrivatePerm, PrivateRoutesUser} from '../components/PrivateRoutes';
 import { AnimatePresence } from 'framer-motion';
 import moment from 'moment/moment';
 import 'moment/locale/it'
-import { AddCliente } from '../pages/AddCliente';
 import Register from '../pages/Register';
-import { AddFatture } from '../pages/AddFatture';
-import { FattureList } from '../pages/FattureList';
-import { AddStatoFattura } from '../pages/AddStatoFattura';
-import { AddIndirizzi } from '../pages/AddIndirizzi';
 import { MyAccount } from '../pages/MyAccount';
+import Argomento from '../pages/Argomento';
 
 
 function AnimateRoutes ()  {
@@ -44,12 +39,7 @@ return (
 
     
       <Route path="/" element={<Homepage />} /> 
-      <Route path="/customerlist" element={<CustomerList />} /> 
-      <Route path="/addcustomer" element={<AddCliente />} /> 
-      <Route path="/listafatture" element={<FattureList />} />
-      <Route path="/aggiungifatture" element={<AddFatture />} /> 
-      <Route path="/aggiungistatofattura" element={<AddStatoFattura />} /> 
-      <Route path="/addindirizzi" element={<AddIndirizzi />} /> 
+      <Route path="/argomento/:id" element={<Argomento />} /> 
       <Route path="/myaccount" element={<MyAccount />} /> 
       
 

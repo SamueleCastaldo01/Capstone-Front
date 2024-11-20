@@ -305,6 +305,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   top: 8.5px;
 }
 
+
 .css-10hburv-MuiTypography-root {
   margin: 0;
   font-family: "Roboto", "Helvetica", "Arial", sans-serif;
@@ -313,4 +314,25 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   line-height: 1.5;
   letter-spacing: 0.00938em;
   display: block;
+}
+
+.quill {
+  background-color: #F1F1F1; /* Imposta il colore di sfondo */
+  border-radius: 10px; /* Bordi arrotondati */
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.quill-editor .ql-toolbar {
+  background-color: #F1F1F1; /* Imposta il colore di sfondo della toolbar */
+  border-top-left-radius: 10px; /* Arrotonda il bordo in alto a sinistra */
+  border-top-right-radius: 10px; /* Arrotonda il bordo in alto a destra */
+}
+
+.quill-editor .ql-editor {
+  background-color: white; /* Imposta il colore di sfondo dell'editor */
+  border-radius: 10px;
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;
+  height: 70vh;
+  font-size: 1.4rem;
 }
