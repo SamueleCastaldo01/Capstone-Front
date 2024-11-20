@@ -111,7 +111,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 
 
 const ListItemCus = styled(ListItem)({
-  padding: '10px 24px', 
+  padding: '10px 15px', 
   fontSize: '1.2rem',    
   
 });
@@ -410,29 +410,18 @@ useEffect(() => {
     }
   }}
       >
-        <DrawerHeader >
-          <div className='d-flex align-items-center gap-3'> 
-            Flash Card
-            
-          </div>
-          <IconButton onClick={handleDrawerClose}>
-            {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon/>}
+          <DrawerHeader sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', padding: '0 8px' }}>
+          <IconButton onClick={handleDrawerClose} >
+           <ChevronLeftIcon sx={{ fontSize: '2rem'}}/>
           </IconButton>
+          <div className='d-flex align-items-center gap-3'> 
+            <h4 className='mb-0'>Corsi</h4>
+          </div>
         </DrawerHeader>
         <Divider />
-        <List>
 
-        <ListItemCus  disablePadding sx={{ display: 'block' }} onClick={() => {navigate("/")}}>
-              <ListItemButton
-              
-          selected={selectedItem === "homepage"}
-          onClick={(event) => handleListItemClick(event, 7)}>
-     
-                <ListItemText primary="HomePage" sx={{ opacity: open ? 1 : 0 }} />
-              </ListItemButton>
-        </ListItemCus>
-
-
+        <List sx={{padding: "0px"}}>
+  
         {/*******Corsi e argomenti */}
         {corsi.map((corso) => {
           const corsoArgomenti = argomenti[corso.id] || []; // Argomenti per il corso corrente
@@ -441,7 +430,7 @@ useEffect(() => {
 
           return (
             <ListItemCus key={corso.id} disablePadding sx={{ display: "block" }}>
-              <ListItemButton onClick={() => handleToggle(corso.id)}>
+              <ListItemButton style={{borderRadius: "10px"}} onClick={() => handleToggle(corso.id)}>
                 <ListItemText primary={corso.nomeCorso} primaryTypographyProps={{fontSize: '20px'}}  sx={{ opacity: 1 }}  />
                 {isOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}
               </ListItemButton>
@@ -451,8 +440,10 @@ useEffect(() => {
                     <CircularProgress size={24} /> // Mostra un caricamento
                   )  : corsoArgomenti.length > 0 ? (
                     corsoArgomenti.map((argomento) => (
-                      <ListItem key={argomento.id} sx={{ pl: 4 }}>
-                        <ListItemText primary={argomento.titolo} primaryTypographyProps={{fontSize: '17px'}}/>
+                      <ListItem key={argomento.id} style={{padding: "8px 0px" }}>
+                        <ListItemButton style={{borderRadius: "10px"}} onClick={() => handleToggle(corso.id)}>
+                          <ListItemText primary={argomento.titolo} primaryTypographyProps={{fontSize: '18px'}}/>
+                        </ListItemButton>
                       </ListItem>
                     ))
                   ) : (
