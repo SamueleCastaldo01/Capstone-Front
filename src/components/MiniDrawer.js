@@ -430,36 +430,36 @@ useEffect(() => {
             </ListItemButton>
           </ListItemCus>
           <ListItemCus>
-          <ListItemButton style={{ borderRadius: "10px", backgroundColor: isHomeActive ? '#E7E7E7' : 'transparent' }} >
+          <ListItemButton style={{ borderRadius: "10px" }} >
               <ListItemText
                 onClick={() => {navigate(`/flashcard`);}}
                 primary={"Flash Card"}
                 primaryTypographyProps={{ fontSize: '20px',
-                  fontWeight: isHomeActive ? 'bold' : 'normal', 
+             
                  }}
                 sx={{ opacity: 1 }}
               />
             </ListItemButton>
           </ListItemCus>
           <ListItemCus>
-          <ListItemButton style={{ borderRadius: "10px", backgroundColor: isHomeActive ? '#E7E7E7' : 'transparent' }} >
+          <ListItemButton style={{ borderRadius: "10px" }} >
               <ListItemText
                 onClick={() => {navigate(`/`);}}
                 primary={"Tecnica Del Pomodoro"}
                 primaryTypographyProps={{ fontSize: '20px',
-                  fontWeight: isHomeActive ? 'bold' : 'normal', 
+              
                  }}
                 sx={{ opacity: 1 }}
               />
             </ListItemButton>
           </ListItemCus>
           <ListItemCus>
-          <ListItemButton style={{ borderRadius: "10px", backgroundColor: isHomeActive ? '#E7E7E7' : 'transparent' }} >
+          <ListItemButton style={{ borderRadius: "10px" }} >
               <ListItemText
                 onClick={() => {navigate(`/`);}}
                 primary={"Mappa Concettuale"}
                 primaryTypographyProps={{ fontSize: '20px',
-                  fontWeight: isHomeActive ? 'bold' : 'normal', 
+            
                  }}
                 sx={{ opacity: 1 }}
               />
