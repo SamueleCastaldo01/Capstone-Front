@@ -155,14 +155,6 @@ export default function MiniDrawer( {signUserOut} ) {
   const [selectedIndex, setSelectedIndex] = useState(1);
   const [selectedItem, setSelectedItem] = useState('');
 
-
-  //permessi utente
-  
-
-  const handleListItemClick = (event, index) => {
-    setSelectedIndex(index);
-  };
-
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };

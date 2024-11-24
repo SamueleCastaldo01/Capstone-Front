@@ -5,6 +5,8 @@ import { useState, useEffect } from "react";
 import { useParams } from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
 import Button from '@mui/material/Button';
+import { IconButton } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 import { errorNoty, successNoty } from '../components/Notify';
 import TextField from '@mui/material/TextField';
 import { motion } from 'framer-motion';
@@ -191,8 +193,13 @@ const handleDelete = () => {
 
           <div className='mt-5 text-center'>
                   {flagDelete &&
-                  <div>
+                  <div className='pt-2' style={{borderTop: "3px solid red"}}>
+                      <div className='d-flex justify-content-between'>
                         <h3 className='text-start'>Elimina <span style={{color: "red"}}>{titoloArgomento}</span></h3>
+                        <IconButton onClick={() => {setFlagDelete(false)}}>
+                          <CloseIcon style={{color: "red"}}/>
+                        </IconButton>
+                      </div>
                         <p className='text-start'><b>Attenzione:</b> Perderai tutti i dati associati a questo <b>Argomento</b></p>
                         <TextField 
                             value={deleteTitoloCroso}

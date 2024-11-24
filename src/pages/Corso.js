@@ -9,6 +9,10 @@ import { motion } from 'framer-motion';
 import { useParams } from 'react-router-dom';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import { IconButton } from '@mui/material';
+import Collapse from '@mui/material/Collapse';
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+import CloseIcon from '@mui/icons-material/Close';
 import { successNoty, errorNoty } from '../components/Notify';
 import Autocomplete from '@mui/material/Autocomplete';
 
@@ -19,6 +23,8 @@ function Corso() {
   const [loading, setLoading] = useState(true); // Per gestire il loading
   const [error, setError] = useState(null); 
   const [flagDelete, setFlagDelete] = useState(false); 
+  const [flagArgomenti, setFlagArgomenti] = useState(true); 
+  const [flagDomande, setFlagDomande] = useState(true); 
   const [deleteNomeCorso, setDeleteNomeCorso] = useState(""); 
   const [nomeCorso, setNomeCorso] = useState(null); 
 
@@ -113,6 +119,7 @@ function Corso() {
           const data = await response.json();
           successNoty("Materia aggiornata :)")
         } else {
+          errorNoty("Errore durante il salvataggio")
           throw new Error('Errore nel salvataggio');
         }
       } catch (err) {
@@ -233,34 +240,49 @@ function Corso() {
             </div>
             
               <div>
-                  <h3 className='mt-5'>I miei argomenti</h3>
-                  <div className='mt-3 ps-3'>
-                    {argomenti.map((argomento) => {
-                      return (
-                        <div className='d-flex align-items-center mb-4' key={argomento.id}>
-                          <IconButton className='p-0'><BookmarkIcon style={{color: "black"}}/></IconButton>
-                          <h5 onClick={() => {navigate("/argomento/" + argomento.id)}} className='mb-0 fakeLink'>{argomento.titolo}</h5>
-                        </div>
-                      )
-                    })
-                    }
-                    <div className='d-flex align-items-center gap-3 ps-1'>
-                    <TextField 
-                      value={titoloArgomento}
-                      onChange={(event) => setTitoloArgomento(event.target.value)}
-                      label="Aggiungi un Argomento"
-                      style={{ width: "350px" }}
-                      InputProps={{ style: { fontSize: "20px" } }} 
-                      InputLabelProps={{ style: { fontSize: "20px" } }}
-                    />
-                      <Button onClick={() => {handleSaveArgomento()}} variant="contained">Aggiungi</Button>
+                 <div className='mt-5 d-flex align-items-center gap-2'>
+                  <h3 className='mb-0'>I miei argomenti</h3>
+                    <IconButton onClick= {() => {setFlagArgomenti(!flagArgomenti)}}>
+                      {flagArgomenti ? <ExpandLessIcon /> : <ExpandMoreIcon/>}
+                    </IconButton>
+                 </div>
+                  <Collapse in={flagArgomenti} timeout="auto" unmountOnExit>
+                    <div className='mt-3 ps-3'>
+                      {argomenti.map((argomento) => {
+                        return (
+                          <div className='d-flex align-items-center mb-4' key={argomento.id}>
+                            <IconButton className='p-0'><BookmarkIcon style={{color: "black"}}/></IconButton>
+                            <h5 onClick={() => {navigate("/argomento/" + argomento.id)}} className='mb-0 fakeLink'>{argomento.titolo}</h5>
+                          </div>
+                        )
+                      })
+                      }
+                      <div className='d-flex align-items-center gap-3 ps-1'>
+                      <TextField 
+                        value={titoloArgomento}
+                        onChange={(event) => setTitoloArgomento(event.target.value)}
+                        label="Aggiungi un Argomento"
+                        style={{ width: "350px" }}
+                        InputProps={{ style: { fontSize: "20px" } }} 
+                        InputLabelProps={{ style: { fontSize: "20px" } }}
+                      />
+                        <Button onClick={() => {handleSaveArgomento()}} variant="contained">Aggiungi</Button>
+                      </div>
                     </div>
-                  </div>
-                </div>
+                  </Collapse>  
+               </div>
 
                 <div>
-                  <h3 className='mt-5'>Le mie Domande</h3>
+                  <div className='mt-5 d-flex align-items-center'>
+                    <h3 className='mb-0'>Le mie Domande</h3>
+                    <IconButton onClick= {() => {setFlagDomande(!flagDomande)}}>
+                      {flagDomande ? <ExpandLessIcon /> : <ExpandMoreIcon/>}
+                    </IconButton>
+                  </div>
+                  
                   <div className='mt-3 ps-3'>
+                    <Collapse in={flagDomande} timeout="auto" unmountOnExit>
+                    </Collapse>
                     <div className='d-flex flex-column ps-1 gap-4'>
                       <TextField 
                           value={domanda}
@@ -311,11 +333,17 @@ function Corso() {
       
      
                 </div>
-                
+                {/***Delete ++++++++++++++++++++++++++++++++++++++++++++++++++ */}
                 <div className='mt-5 text-center'>
                   {flagDelete &&
-                  <div>
+                  <div className='pt-2' style={{borderTop: "3px solid red"}}>
+                      <div className='d-flex justify-content-between'>
                         <h3 className='text-start'>Elimina <span style={{color: "red"}}>{nomeCorso}</span></h3>
+                        <IconButton onClick={() => {setFlagDelete(false)}}>
+                          <CloseIcon style={{color: "red"}}/>
+                        </IconButton>
+                      </div>
+                      
                         <p className='text-start'><b>Attenzione:</b> Perderai tutti i dati associati a questa <b>Materia</b></p>
                         <TextField 
                             value={deleteNomeCorso}
