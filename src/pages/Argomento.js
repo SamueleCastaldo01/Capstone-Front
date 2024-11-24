@@ -6,6 +6,7 @@ import { useParams } from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
 import Button from '@mui/material/Button';
 import { errorNoty, successNoty } from '../components/Notify';
+import TextField from '@mui/material/TextField';
 import { motion } from 'framer-motion';
 
 function Argomento() {
@@ -16,6 +17,10 @@ function Argomento() {
   const [idCorso, setIdCorso] = useState('');
   const [titoloArgomento, setTitoloArgomento] = useState(''); 
   const [nomeCorso, setNomeCorso] = useState(''); 
+
+  //eliminazione
+  const [flagDelete, setFlagDelete] = useState(false); 
+  const [deleteTitoloCroso, setDeleteTitoloCorso] = useState(""); 
 
   const [loading, setLoading] = useState(true); // Per gestire il loading
   const [error, setError] = useState(null); 
@@ -95,7 +100,6 @@ function Argomento() {
           },
         });
   
-        // Gestione della risposta
         if (response.ok) {
           const data = await response.json();
           setArgomento(data); 
@@ -109,14 +113,53 @@ function Argomento() {
         }
       } catch (err) {
         console.error('Errore:', err);
-        setError(err.message); // Mostra l'errore
-        setLoading(false); // Imposta lo stato di loading a false
+        setError(err.message); 
+        setLoading(false); 
       }
     };
 
     useEffect(() => {
-      fetchArgomento(id); // Passa l'ID dell'argomento
+      fetchArgomento(id); 
     }, [id]);
+
+
+    
+//delete--------------------------------------------
+const deleteArgomento = async (id) => {  
+  try {
+    const response = await fetch(`http://localhost:3001/argomento/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json', 
+      },
+    });
+    if (response.ok) {
+        successNoty("Argomento Eliminato")
+        navigate("/")
+    } else {
+      throw new Error('Errore nel recupero dei dati');
+    }
+  } catch (err) {
+    console.error('Errore:', err);
+    setError(err.message); 
+    setLoading(false);
+  }
+};
+
+
+const handleDelete = () => {
+  if(!flagDelete) {
+    setFlagDelete(true);
+  } else {
+    if(deleteTitoloCroso == titoloArgomento) {
+      deleteArgomento(id)
+    } else {
+      errorNoty("Hai sbagliato a scrivere il nome del corso")
+    }
+    
+  }
+}
 
   return (
     <>
@@ -144,10 +187,29 @@ function Argomento() {
             modules={modules}
             className="quill-editor" 
           />
-
-    
-
           </div>
+
+          <div className='mt-5 text-center'>
+                  {flagDelete &&
+                  <div>
+                        <h3 className='text-start'>Elimina <span style={{color: "red"}}>{titoloArgomento}</span></h3>
+                        <p className='text-start'><b>Attenzione:</b> Perderai tutti i dati associati a questo <b>Argomento</b></p>
+                        <TextField 
+                            value={deleteTitoloCroso}
+                            onChange={(event) => setDeleteTitoloCorso(event.target.value)}
+                            label="Aggingi il nome di questo corso per eliminarlo"
+                            style={{ width: "100%" }}
+                            InputProps={{ style: { fontSize: "20px" } }} 
+                            InputLabelProps={{ style: { fontSize: "20px" } }} 
+                          />
+                  </div>
+                  }
+          
+                   <Button className='w-100' onClick={() => {handleDelete()}} style={{height: "50px"}} color='error' variant='contained'>Elimina Argomento</Button>
+                </div>
+
+                <div style={{height: "50px"}}></div>
+            
 
         </div>
 
