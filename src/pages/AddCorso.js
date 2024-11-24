@@ -42,8 +42,8 @@ function AddCorso() {
 
       if (response.ok) {
         const data = await response.json();
-        console.log('Dati salvati:', data);
-        alert('Contenuto salvato con successo!');
+        successNoty("Materia Creata correttamente")
+        navigate("/corso/" +data.id)
       } else {
         throw new Error('Errore nel salvataggio');
       }

@@ -18,6 +18,8 @@ function Corso() {
   const [value, setValue] = useState('');
   const [loading, setLoading] = useState(true); // Per gestire il loading
   const [error, setError] = useState(null); 
+  const [flagDelete, setFlagDelete] = useState(false); 
+  const [deleteNomeCorso, setDeleteNomeCorso] = useState(""); 
   const [nomeCorso, setNomeCorso] = useState(null); 
 
   const [titoloArgomento, setTitoloArgomento] = useState(""); 
@@ -121,34 +123,73 @@ function Corso() {
     };
 
         //------------------------------------------------------------------------------------------
-        const handleSaveArgomento = async () => {
-          try {
-            const response = await fetch('http://localhost:3001/argomento', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json', 
-                'Authorization': `Bearer ${token}`, 
-              },
-              body: JSON.stringify({
-                titolo: titoloArgomento, 
-                id_corso: id, 
-                contenuto: "<h1>" + titoloArgomento + "</h1>"
-              }),
-            });
-      
-            if (response.ok) {
-              const data = await response.json();
-              successNoty("Argomento creato :)")
-              fetchArgomentiPerCorso(id)
-            } else {
-              throw new Error('Errore nel salvataggio');
-            }
-          } catch (err) {
-            console.error('Errore:', err);
-            setError(err.message); // Mostra l'errore
-            alert('Errore nel salvataggio del contenuto');
+      const handleSaveArgomento = async () => {
+        try {
+          const response = await fetch('http://localhost:3001/argomento', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json', 
+              'Authorization': `Bearer ${token}`, 
+            },
+            body: JSON.stringify({
+              titolo: titoloArgomento, 
+              id_corso: id, 
+              contenuto: "<h1>" + titoloArgomento + "</h1>"
+            }),
+          });
+    
+          if (response.ok) {
+            const data = await response.json();
+            successNoty("Argomento creato :)")
+            fetchArgomentiPerCorso(id)
+          } else {
+            throw new Error('Errore nel salvataggio');
           }
-        };
+        } catch (err) {
+          console.error('Errore:', err);
+          setError(err.message); // Mostra l'errore
+          alert('Errore nel salvataggio del contenuto');
+        }
+      };
+
+      //delete--------------------------------------------------------------
+      const deleteCorso = async (id) => {  
+        try {
+          const response = await fetch(`http://localhost:3001/corso/${id}`, {
+            method: 'DELETE',
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json', 
+            },
+          });
+    
+          // Gestione della risposta
+          if (response.ok) {
+              successNoty("Corso Eliminato")
+              navigate("/")
+          } else {
+            throw new Error('Errore nel recupero dei dati');
+          }
+        } catch (err) {
+          console.error('Errore:', err);
+          setError(err.message); 
+          setLoading(false);
+        }
+      };
+
+
+      const handleDelete = () => {
+        if(!flagDelete) {
+          setFlagDelete(true);
+        } else {
+          if(deleteNomeCorso == nomeCorso) {
+            deleteCorso(id)
+          } else {
+            errorNoty("Hai sbagliato a scrivere il nome del corso")
+          }
+          
+        }
+      }
 
 
   return (
@@ -272,7 +313,22 @@ function Corso() {
                 </div>
                 
                 <div className='mt-5 text-center'>
-                   <Button className='w-100' onClick={() => {""}} style={{height: "50px"}} color='error' variant='contained'>Elimina Corso</Button>
+                  {flagDelete &&
+                  <div>
+                        <h3 className='text-start'>Elimina <span style={{color: "red"}}>{nomeCorso}</span></h3>
+                        <p className='text-start'><b>Attenzione:</b> Perderai tutti i dati associati a questa <b>Materia</b></p>
+                        <TextField 
+                            value={deleteNomeCorso}
+                            onChange={(event) => setDeleteNomeCorso(event.target.value)}
+                            label="Aggingi il nome di questo corso per eliminarlo"
+                            style={{ width: "100%" }}
+                            InputProps={{ style: { fontSize: "20px" } }} 
+                            InputLabelProps={{ style: { fontSize: "20px" } }} 
+                          />
+                  </div>
+                  }
+          
+                   <Button className='w-100' onClick={() => {handleDelete()}} style={{height: "50px"}} color='error' variant='contained'>Elimina Corso</Button>
                 </div>
             
 
