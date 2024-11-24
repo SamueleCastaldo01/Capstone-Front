@@ -96,12 +96,22 @@ function Homepage() {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.7 }}>
 
-        <div style={{height: "70vh"}} className='px-4 px-lg-0 text-center d-flex flex-column justify-content-center'>
+        <div style={{height: "70vh"}} className='px-4 px-lg-0 text-center d-flex align-items-center justify-content-lg-start gap-4'>
 
             <div className='addAppunti' onClick={() => {navigate("/addcorso")}}>
               <h2>Crea una Materia</h2>
               <div style={{paddingTop: "120px"}}>
                 <h2 style={{fontSize: "100px"}}>+</h2>
+              </div>
+            </div>
+            <div className='homeMaterie' onClick={() => {navigate("/addcorso")}}>
+              <h2>I miei appunti</h2>
+              <div style={{paddingTop: "250px"}}>
+              </div>
+            </div>
+            <div className='homeMaterie' onClick={() => {navigate("/addcorso")}}>
+              <h2>Test</h2>
+              <div style={{paddingTop: "250px"}}>
               </div>
             </div>
 

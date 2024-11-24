@@ -270,6 +270,11 @@ function Corso() {
       
      
                 </div>
+                
+                <div className='mt-5 text-center'>
+                   <Button className='w-100' onClick={() => {""}} style={{height: "50px"}} color='error' variant='contained'>Elimina Corso</Button>
+                </div>
+            
 
             </div>
 

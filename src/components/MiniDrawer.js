@@ -335,7 +335,7 @@ useEffect(() => {
      
 
         <div className='text-white d-flex gap-4'>
-          <p className={`mb-0 navLink ${isHomeActive ? 'active' : ''}`} onClick={() => navigate("/")}>Home</p>
+          <p className={`mb-0 navLink ${isHomeActive ? 'active' : ''}`} onClick={() => navigate("/")}>Veyro</p>
         </div>
 
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
@@ -396,7 +396,6 @@ useEffect(() => {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
               >
-                <MenuItem onClick={handleClose}>Profile</MenuItem>
                 <MenuItem onClick={() => {handleClose(); navigate("/myaccount")}}>My account</MenuItem>
                 <MenuItem onClick={ () => {handleClose(); navigate("/login")}}>LogIn</MenuItem>
                 <MenuItem onClick={ () => {signUserOut(); handleClose(); localStorage.setItem(false,"isAuth"); setIsAuth(false); navigate("/login")}}>LogOut</MenuItem> 
@@ -420,7 +419,7 @@ useEffect(() => {
            <ChevronLeftIcon sx={{ fontSize: '2rem', color: colorIcon}}/>
           </IconButton>
           <div className='d-flex align-items-center gap-3 text-white'> 
-            <h5 className='mb-0'>Veyro</h5>
+            <h5 className='mb-0'></h5>
           </div>
         </DrawerHeader>
         <Divider />
@@ -483,7 +482,7 @@ useEffect(() => {
               onClick={() => setMaterieOpen(!isMaterieOpen)} // Toggles the section
             >
               <ListItemText
-                primary="Le mie materie"
+                primary="I miei Appunti"
                 primaryTypographyProps={{ fontSize: '22px', fontWeight: isMaterieOpen ? "bold" : "" }}
                 sx={{ opacity: 1  }}
               />
