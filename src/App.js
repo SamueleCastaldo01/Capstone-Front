@@ -88,7 +88,6 @@ function App() {
       </Box>
 
       {/* Mostra BottomNavi solo su schermi piccoli */}
-      {matches && <BottomNavi />}
       
       {/* Mostra il popup di installazione se disponibile */}
     <Snackbar
@@ -128,7 +127,7 @@ function AppContent({ signUserOut, matches }) {
     <>
       {/* Mostra MiniDrawer solo se non è la pagina di login o block e lo schermo è grande */}
       
-      {!matches && isAuth && <MiniDrawer signUserOut={signUserOut} />}
+      { isAuth && <MiniDrawer signUserOut={signUserOut} />}
       
 
     
@@ -145,7 +144,7 @@ function AppContent({ signUserOut, matches }) {
       >
         <ToastContainer limit={1} />
         {/* Render delle rotte animate */}
-        <div style={{ marginTop: !matches && "50px" }}>
+        <div style={{ marginTop: "50px" }}>
           <AnimateRoutes />
         </div>
       </Box>

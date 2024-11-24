@@ -347,6 +347,10 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   font-weight: bold;
 }
 
+.navButton.active {
+  font-weight: bold;
+}
+
 .addAppunti {
   border: 1px dashed black;
   padding: 80px 10px 210px 10px;
@@ -358,4 +362,13 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 .addAppunti:hover {
   background-color: #F1F1F1;
+}
+
+.css-a7tnn1-MuiFormControl-root-MuiTextField-root input[type="color"] {
+  padding: 7px
+}
+
+.fakeLink {
+  cursor: pointer; 
+  text-decoration: underline;
 }

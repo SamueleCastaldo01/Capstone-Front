@@ -13,6 +13,7 @@ import Register from '../pages/Register';
 import { MyAccount } from '../pages/MyAccount';
 import Argomento from '../pages/Argomento';
 import AddCorso from '../pages/AddCorso';
+import Corso from '../pages/Corso';
 
 
 function AnimateRoutes ()  {
@@ -41,6 +42,7 @@ return (
     
       <Route path="/" element={<Homepage />} /> 
       <Route path="/argomento/:id" element={<Argomento />} /> 
+      <Route path="/corso/:id" element={<Corso />} /> 
       <Route path="/myaccount" element={<MyAccount />} /> 
       <Route path="/addCorso" element={<AddCorso />} /> 
       

@@ -20,7 +20,7 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams  } from 'react-router-dom';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import Avatar from '@mui/material/Avatar';
@@ -61,14 +61,14 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 
 //serve per cambiare il colore del background della navbar
 const colorBack = "#F1F1F1"
-const colorAppBar = "#771AA9"
+const colorAppBar = "#8300E9"
 const colorIcon = "white"
 
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== 'open',
 })(({ theme, open }) => ({
   zIndex: theme.zIndex.drawer + 1,
-  backgroundColor: colorAppBar,
+  backgroundImage: 'linear-gradient(to right, #8300e9 40%, #6531EF 75%, #3483f9)',
   color: 'black', 
   boxShadow: "none",
   boxShadow: "0px 2px 0px rgba(0, 0, 0, 0.2)",
@@ -139,10 +139,13 @@ export default function MiniDrawer( {signUserOut} ) {
   const token = localStorage.getItem('authToken');
   const [openState, setOpenState] = useState({});
   const [loading, setLoading] = useState({});
+  const [isMaterieOpen, setMaterieOpen] = useState(false);
+  const [currentCorsoId, setCurrentCorsoId] = useState(null); 
 
   const location= useLocation();
   const currentArgomentoId = location.pathname.split('/').pop();
   const isHomeActive = location.pathname === "/";
+  const { corsoId } = useParams(); 
 
   const [anchorEl, setAnchorEl] = useState(null);
   const theme = useTheme();
@@ -187,6 +190,12 @@ export default function MiniDrawer( {signUserOut} ) {
   const handleDrawerClose = () => {
     setOpen(false);
   };
+
+  useEffect(() => {
+    if (corsoId) {
+      setCurrentCorsoId(corsoId); // Se l'URL contiene l'ID del corso, evidenzia quel corso
+    }
+  }, [corsoId]);
 
 
   const fetchCorso = async (id) => {  
@@ -327,9 +336,6 @@ useEffect(() => {
 
         <div className='text-white d-flex gap-4'>
           <p className={`mb-0 navLink ${isHomeActive ? 'active' : ''}`} onClick={() => navigate("/")}>Home</p>
-          <p className='mb-0 navLink'>Flash Card</p>
-          <p className='mb-0 navLink'>Tecnica Del Pomodoro</p>
-          <p className='mb-0 navLink'>Mappa Concettuale</p>
         </div>
 
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
@@ -414,28 +420,114 @@ useEffect(() => {
            <ChevronLeftIcon sx={{ fontSize: '2rem', color: colorIcon}}/>
           </IconButton>
           <div className='d-flex align-items-center gap-3 text-white'> 
-            <h5 className='mb-0'>Corsi</h5>
+            <h5 className='mb-0'>Veyro</h5>
           </div>
         </DrawerHeader>
         <Divider />
 
         <List sx={{padding: "0px"}}>
+
+          <ListItemCus>
+          <ListItemButton onClick={() => {navigate(`/`);}} style={{ borderRadius: "10px", backgroundColor: isHomeActive ? '#E7E7E7' : 'transparent' }} >
+              <ListItemText
+                primary={"Home"}
+                primaryTypographyProps={{ fontSize: '20px',
+                  fontWeight: isHomeActive ? 'bold' : 'normal', 
+                 }}
+                sx={{ opacity: 1 }}
+              />
+            </ListItemButton>
+          </ListItemCus>
+          <ListItemCus>
+          <ListItemButton style={{ borderRadius: "10px", backgroundColor: isHomeActive ? '#E7E7E7' : 'transparent' }} >
+              <ListItemText
+                onClick={() => {navigate(`/flashcard`);}}
+                primary={"Flash Card"}
+                primaryTypographyProps={{ fontSize: '20px',
+                  fontWeight: isHomeActive ? 'bold' : 'normal', 
+                 }}
+                sx={{ opacity: 1 }}
+              />
+            </ListItemButton>
+          </ListItemCus>
+          <ListItemCus>
+          <ListItemButton style={{ borderRadius: "10px", backgroundColor: isHomeActive ? '#E7E7E7' : 'transparent' }} >
+              <ListItemText
+                onClick={() => {navigate(`/`);}}
+                primary={"Tecnica Del Pomodoro"}
+                primaryTypographyProps={{ fontSize: '20px',
+                  fontWeight: isHomeActive ? 'bold' : 'normal', 
+                 }}
+                sx={{ opacity: 1 }}
+              />
+            </ListItemButton>
+          </ListItemCus>
+          <ListItemCus>
+          <ListItemButton style={{ borderRadius: "10px", backgroundColor: isHomeActive ? '#E7E7E7' : 'transparent' }} >
+              <ListItemText
+                onClick={() => {navigate(`/`);}}
+                primary={"Mappa Concettuale"}
+                primaryTypographyProps={{ fontSize: '20px',
+                  fontWeight: isHomeActive ? 'bold' : 'normal', 
+                 }}
+                sx={{ opacity: 1 }}
+              />
+            </ListItemButton>
+          </ListItemCus>
   
 
 
-        {/*******Corsi e argomenti */}
-        {corsi.map((corso) => {
-        const corsoArgomenti = argomenti[corso.id] || [];
-        const isOpen = openState[corso.id] || false; 
-        const isLoading = loading[corso.id]; 
+        <ListItemCus disablePadding sx={{ display: "block" }}>
+            <ListItemButton 
+              style={{ borderRadius: "10px", backgroundColor: isMaterieOpen ? '#E7E7E7' : 'transparent', }} 
+              onClick={() => setMaterieOpen(!isMaterieOpen)} // Toggles the section
+            >
+              <ListItemText
+                primary="Le mie materie"
+                primaryTypographyProps={{ fontSize: '22px', fontWeight: isMaterieOpen ? "bold" : "" }}
+                sx={{ opacity: 1  }}
+              />
+              {isMaterieOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+            </ListItemButton>
+            <Collapse in={isMaterieOpen} timeout="auto" unmountOnExit>
+              <List component="div" disablePadding sx={{ pl: 4 }}>
+                {/******* Corsi e argomenti *******/}
+                {corsi.map((corso) => {
+                  const corsoArgomenti = argomenti[corso.id] || [];
+                  const isOpen = openState[corso.id] || false; 
+                  const isLoading = loading[corso.id]; 
 
-        return (
-          <ListItemCus key={corso.id} disablePadding sx={{ display: "block" }}>
-            <ListItemButton style={{ borderRadius: "10px" }} onClick={() => handleToggle(corso.id)}>
+
+                  const isSelectedCorso = 
+                    corso.id.toString() === currentCorsoId || 
+                    corsoArgomenti.some(argomento => argomento.id.toString() === currentArgomentoId);
+
+                  return (
+              <ListItemCus disablePadding sx={{ display: "block" }}>
+            <ListItemButton
+              style={{
+                borderRadius: "10px",
+                backgroundColor: isSelectedCorso ? '#E7E7E7' : 'transparent',
+              }}
+              onClick={() => {
+                setCurrentCorsoId(corso.id); 
+                handleToggle(corso.id); 
+              }}
+              sx={{
+                borderLeft: `15px solid ${corso.coloreCopertina}`,
+              }}
+            >
               <ListItemText
                 primary={corso.nomeCorso}
-                primaryTypographyProps={{ fontSize: '20px' }}
+                primaryTypographyProps={{
+                  fontSize: '20px',
+                  fontWeight: isSelectedCorso ? 'bold' : 'normal',
+                }}
                 sx={{ opacity: 1 }}
+                onClick={(event) => {
+                  event.stopPropagation(); 
+                  navigate(`/corso/${corso.id}`); 
+                }}
               />
               {isOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}
             </ListItemButton>
@@ -445,19 +537,21 @@ useEffect(() => {
                   <CircularProgress size={24} /> // Mostra un caricamento
                 ) : corsoArgomenti.length > 0 ? (
                   corsoArgomenti.map((argomento) => {
-                   
-                    const isSelected = argomento.id.toString() === currentArgomentoId; 
+                    const isSelectedArgomento = argomento.id.toString() === currentArgomentoId;
                     return (
-                      <ListItem key={argomento.id} style={{padding: "2px 0px"}}>
+                      <ListItem key={argomento.id} style={{ padding: "2px 0px" }}>
                         <ListItemButton
-                          style={{ borderRadius: "10px", backgroundColor: isSelected ? '#E7E7E7' : 'transparent' }}
-                          onClick={() => { navigate(`/argomento/${argomento.id}`); }} // Naviga all'argomento selezionato
+                          style={{
+                            borderRadius: "10px",
+                            backgroundColor: isSelectedArgomento ? '#E7E7E7' : 'transparent',
+                          }}
+                          onClick={() => { navigate(`/argomento/${argomento.id}`); }}
                         >
                           <ListItemText
                             primary={argomento.titolo}
                             primaryTypographyProps={{
                               fontSize: '18px',
-                              fontWeight: isSelected ? 'bold' : 'normal', // Grassetto se selezionato
+                              fontWeight: isSelectedArgomento ? 'bold' : 'normal',
                             }}
                           />
                         </ListItemButton>
@@ -470,8 +564,11 @@ useEffect(() => {
               </List>
             </Collapse>
           </ListItemCus>
-        );
-      })}
+                  );
+                })}
+              </List>
+            </Collapse>
+          </ListItemCus>
 
 
         </List>

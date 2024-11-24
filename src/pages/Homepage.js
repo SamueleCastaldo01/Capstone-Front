@@ -99,7 +99,7 @@ function Homepage() {
         <div style={{height: "70vh"}} className='px-4 px-lg-0 text-center d-flex flex-column justify-content-center'>
 
             <div className='addAppunti' onClick={() => {navigate("/addcorso")}}>
-              <h2>Aggiungi Appunti</h2>
+              <h2>Crea una Materia</h2>
               <div style={{paddingTop: "120px"}}>
                 <h2 style={{fontSize: "100px"}}>+</h2>
               </div>

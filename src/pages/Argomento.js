@@ -128,15 +128,15 @@ function Argomento() {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.7 }}>
         <div className='px-4 pt-3 px-lg-0 divPrincipale'>
-            <h5 className='mb-0'>{nomeCorso}</h5>
-            <div className='d-flex align-items-center'>
+            <h6 onClick={() => {navigate("/corso/" + idCorso)}} className='mb-0 fakeLink'>{nomeCorso}</h6>
+            <div className='d-flex align-items-center justify-content-between'>
                 <input style={{border: "none", fontSize: "40px", fontWeight:"bolder", width: "70%"}} value={titoloArgomento} onChange={(event) => setTitoloArgomento(event.target.value)} />
-                <Button variant="contained" color="success" onClick={handleSave}>
+                <Button variant="contained" color="primary" onClick={handleSave}>
                     Salva
                 </Button>
             </div>
        
-          <div className='mt-4 d-flex flex-column gap-3 justify-content-start'>
+          <div className='mt-1 d-flex flex-column gap-3 justify-content-start'>
           <ReactQuill
             theme="snow"
             value={value}
