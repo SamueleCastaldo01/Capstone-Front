@@ -113,7 +113,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 
 
 const ListItemCus = styled(ListItem)({
-  padding: '10px 15px', 
+  padding: '8px 15px', 
   fontSize: '1.1rem',    
   
 });
@@ -126,7 +126,7 @@ const ListItemTextCus = styled(ListItemText)({
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
-export default function MiniDrawer( {signUserOut} ) {
+export default function MiniDrawer( {signUserOut, fetchArgomentiPerCorsoPrp, argomentiProp, corsiProp, fetchCorsoPrp} ) {
 
   const [notiPa, setNotiPa] = useState("");  //flag per comparire la notifica dot
   const [notiMessPA, setNotiMessPA] = useState(false);  //flag per far comparire il messaggio
@@ -190,29 +190,6 @@ export default function MiniDrawer( {signUserOut} ) {
   }, [corsoId]);
 
 
-  const fetchCorso = async (id) => {  
-      try {
-        const response = await fetch(`http://localhost:3001/corso/me`, {
-          method: 'GET', 
-          headers: {
-            'Authorization': `Bearer ${token}`, 
-            'Content-Type': 'application/json',
-          },
-        });
-
-        // Gestione della risposta
-        if (response.ok) {
-          const data = await response.json();
-          setCorsi(data);
-          setLoadingcorsi(false); 
-        } else {
-          throw new Error('Errore nel recupero dei dati');
-        }
-      } catch (err) {
-        console.error('Errore:', err);
-        setLoadingcorsi(false); 
-    };
-  }
 
   const handleToggle = async (idCorso) => {
     setOpenState((prev) => ({
@@ -220,17 +197,12 @@ export default function MiniDrawer( {signUserOut} ) {
       [idCorso]: !prev[idCorso],
     }));
   
-    if (!argomenti[idCorso] && !loading[idCorso]) {
+    if (!loading[idCorso]) {
       setLoading((prev) => ({ ...prev, [idCorso]: true })); 
   
       try {
-        const data = await fetchArgomentiPerCorso(idCorso);
-        if (data) {
-          setArgomenti((prev) => ({
-            ...prev,
-            [idCorso]: data,
-          }));
-        }
+        fetchArgomentiPerCorsoPrp(idCorso);
+ 
       } catch (err) {
         console.error(`Errore nel caricamento degli argomenti per il corso ${idCorso}`, err);
       } finally {
@@ -274,7 +246,7 @@ export default function MiniDrawer( {signUserOut} ) {
 
 
 useEffect(() => {
-  fetchCorso()
+  fetchCorsoPrp()
 },[])
 
 
@@ -371,7 +343,7 @@ useEffect(() => {
               <Menu  sx={
         { mt: "1px", "& .MuiMenu-paper": 
         { backgroundColor: "#F9F9F9",
-          color: "white" }, 
+          color: "black" }, 
         }
         }
                 id="menu-appbar"
@@ -483,8 +455,8 @@ useEffect(() => {
             <Collapse in={isMaterieOpen} timeout="auto" unmountOnExit>
               <List component="div" disablePadding sx={{ pl: 4 }}>
                 {/******* Corsi e argomenti *******/}
-                {corsi.map((corso) => {
-                  const corsoArgomenti = argomenti[corso.id] || [];
+                {corsiProp.map((corso) => {
+                  const corsoArgomenti = argomentiProp[corso.id] || [];
                   const isOpen = openState[corso.id] || false; 
                   const isLoading = loading[corso.id]; 
 

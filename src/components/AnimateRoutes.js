@@ -16,19 +16,11 @@ import AddCorso from '../pages/AddCorso';
 import Corso from '../pages/Corso';
 
 
-function AnimateRoutes ()  {
+function AnimateRoutes ({fetchArgomentiPerCorso, fetchCorsoPrp})  {
     
-    
-
     const location = useLocation();
     //const [isAuth, setIsAuth] = useState(localStorage.getItem("isAuth"));
     const isAuth = useSelector((state) => state.auth.isAuth);
-    const timeElapsed = Date.now();  //prende la data attuale in millisecondi
-    const today = new Date(timeElapsed);    //converte nel tipo data
-    var formattedDate = moment(today).format('DD-MM-YYYY');  //coverte nel formato richiesto
-    localStorage.setItem("today", formattedDate);
-    const [todayC, setTodayC] = useState(localStorage.getItem("today"));  //variabile che andiamo ad utilizzare
-
 
 
 return (
@@ -38,16 +30,11 @@ return (
       {/**qui ci vanno quelli che non servono i permessi, o se ne creano degli altri */}
 
     <Route element={<PrivateRoutes isAuth={isAuth}/>}> 
-
-    
       <Route path="/" element={<Homepage />} /> 
-      <Route path="/argomento/:id" element={<Argomento />} /> 
-      <Route path="/corso/:id" element={<Corso />} /> 
+      <Route path="/argomento/:id" element={<Argomento fetchArgomentiPerCorso= {fetchArgomentiPerCorso}/>} /> 
+      <Route path="/corso/:id" element={<Corso fetchArgomentiPerCorso= {fetchArgomentiPerCorso} fetchCorsoPrp={fetchCorsoPrp}/>} /> 
       <Route path="/myaccount" element={<MyAccount />} /> 
-      <Route path="/addCorso" element={<AddCorso />} /> 
-      
-
-
+      <Route path="/addCorso" element={<AddCorso fetchCorsoPrp={fetchCorsoPrp}/>} /> 
     </Route>
  
         

@@ -11,7 +11,7 @@ import { errorNoty, successNoty } from '../components/Notify';
 import TextField from '@mui/material/TextField';
 import { motion } from 'framer-motion';
 
-function Argomento() {
+function Argomento({fetchArgomentiPerCorso}) {
 
   const [flagCont, setFlagCont] = React.useState(false);
 
@@ -81,13 +81,13 @@ function Argomento() {
       if (response.ok) {
         const data = await response.json();
         successNoty("Dati salvati :)")
+        fetchArgomentiPerCorso(idCorso);
       } else {
         throw new Error('Errore nel salvataggio');
       }
     } catch (err) {
       console.error('Errore:', err);
       setError(err.message); // Mostra l'errore
-      alert('Errore nel salvataggio del contenuto');
     }
   };
 
@@ -138,6 +138,7 @@ const deleteArgomento = async (id) => {
     });
     if (response.ok) {
         successNoty("Argomento Eliminato")
+        fetchArgomentiPerCorso(idCorso);
         navigate("/")
     } else {
       throw new Error('Errore nel recupero dei dati');

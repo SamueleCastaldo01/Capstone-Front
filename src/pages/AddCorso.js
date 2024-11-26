@@ -8,7 +8,7 @@ import Button from '@mui/material/Button';
 import { motion } from 'framer-motion';
 import { successNoty, errorNoty } from '../components/Notify';
 
-function AddCorso() {
+function AddCorso({fetchCorsoPrp}) {
 
   const [flagCont, setFlagCont] = React.useState(false);
   const [value, setValue] = useState('');
@@ -43,6 +43,7 @@ function AddCorso() {
       if (response.ok) {
         const data = await response.json();
         successNoty("Materia Creata correttamente")
+        fetchCorsoPrp()
         navigate("/corso/" +data.id)
       } else {
         throw new Error('Errore nel salvataggio');

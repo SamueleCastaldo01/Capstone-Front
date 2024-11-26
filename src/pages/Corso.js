@@ -21,7 +21,7 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 
-function Corso() {
+function Corso({fetchArgomentiPerCorso, fetchCorsoPrp}) {
 
   const [flagCont, setFlagCont] = React.useState(false);
   const [value, setValue] = useState('');
@@ -80,6 +80,7 @@ function Corso() {
           setNomeCorso(data.nomeCorso)
           setColoreCopertina(data.coloreCopertina)
           setLoading(false); 
+          fetchArgomentiPerCorsoMe(id);
           fetchArgomentiPerCorso(id);
           fetchDomandePerCorso(id, 0);
         } else {
@@ -92,7 +93,7 @@ function Corso() {
       }
     };
 
-    const fetchArgomentiPerCorso = async (idCorso) => {
+    const fetchArgomentiPerCorsoMe = async (idCorso) => {
         try {
           const response = await fetch(`http://localhost:3001/argomento/corso/${idCorso}`, {
             headers: {
@@ -152,6 +153,7 @@ function Corso() {
         if (response.ok) {
           const data = await response.json();
           successNoty("Materia aggiornata :)")
+          fetchCorsoPrp();
         } else {
           errorNoty("Errore durante il salvataggio")
           throw new Error('Errore nel salvataggio');
@@ -182,7 +184,8 @@ function Corso() {
           if (response.ok) {
             const data = await response.json();
             successNoty("Argomento creato :)")
-            fetchArgomentiPerCorso(id)
+            fetchArgomentiPerCorsoMe(id)
+            fetchArgomentiPerCorso(id);
             setTitoloArgomento("");
           } else {
             throw new Error('Errore nel salvataggio');
@@ -239,6 +242,7 @@ function Corso() {
           // Gestione della risposta
           if (response.ok) {
               successNoty("Corso Eliminato")
+              fetchCorsoPrp()
               navigate("/")
           } else {
             throw new Error('Errore nel recupero dei dati');
@@ -370,7 +374,7 @@ function Corso() {
                           <MenuItem value={0}>Questo Corso</MenuItem>
                           {argomenti.map((argomento) => {
                             return(
-                              <MenuItem value={argomento.id}>{argomento.titolo}</MenuItem>
+                              <MenuItem key={argomento.id} value={argomento.id}>{argomento.titolo}</MenuItem>
                             )
                           })}
                         </Select>

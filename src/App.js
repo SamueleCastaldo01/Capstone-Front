@@ -116,22 +116,71 @@ function App() {
 // Componente per il contenuto principale
 function AppContent({ signUserOut, matches }) {
   const location = useLocation(); // Usa useLocation per ottenere l'URL corrente
+  const [corsi, setCorsi] = useState([]); 
+  const [loadingcorsi, setLoadingcorsi] = useState(true); 
+  const [loading, setLoading] = useState({});
+  const token = localStorage.getItem('authToken');
+  const [argomenti, setArgomenti] = useState(() => {
+    const saved = localStorage.getItem('argomenti');
+    return saved ? JSON.parse(saved) : {}; 
+  });
 
-  // Verifica se l'utente si trova nelle pagine di login o block
-  const isLoginPage = location.pathname === "/login";
-  const isBlockPage = location.pathname === "/block";
+
   let ta = supa.includes(localStorage.getItem("uid"));
   const isAuth = useSelector(state => state.auth.isAuth);
 
+  const fetchCorso = async () => {  
+    try {
+      const response = await fetch(`http://localhost:3001/corso/me`, {
+        method: 'GET', 
+        headers: {
+          'Authorization': `Bearer ${token}`, 
+          'Content-Type': 'application/json',
+        },
+      });
+
+      // Gestione della risposta
+      if (response.ok) {
+        const data = await response.json();
+        setCorsi(data);
+        setLoadingcorsi(false); 
+      } else {
+        throw new Error('Errore nel recupero dei dati');
+      }
+    } catch (err) {
+      console.error('Errore:', err);
+      setLoadingcorsi(false); 
+  };
+}
+
+
+  const fetchArgomentiPerCorso = async (idCorso) => {
+    try {
+      const response = await fetch(`http://localhost:3001/argomento/corso/${idCorso}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`, 
+          'Content-Type': 'application/json',
+        },
+      });
+      const data = await response.json();
+      console.log("Sono entrato brooo")
+      setArgomenti((prev) => {
+        const updated = { ...prev, [idCorso]: data };
+        localStorage.setItem('argomenti', JSON.stringify(updated));
+        return updated;
+      });
+      console.log(argomenti)
+    } catch (err) {
+
+    }
+  };
+
+
   return (
     <>
-      {/* Mostra MiniDrawer solo se non è la pagina di login o block e lo schermo è grande */}
       
-      { isAuth && <MiniDrawer signUserOut={signUserOut} />}
+      { isAuth && <MiniDrawer fetchArgomentiPerCorsoPrp={fetchArgomentiPerCorso} fetchCorsoPrp={fetchCorso} argomentiProp={argomenti} corsiProp={corsi} signUserOut={signUserOut} />}
       
-
-    
-
       <Box
         component="main"
         sx={{
@@ -145,7 +194,7 @@ function AppContent({ signUserOut, matches }) {
         <ToastContainer limit={1} />
         {/* Render delle rotte animate */}
         <div style={{ marginTop: "50px" }}>
-          <AnimateRoutes />
+          <AnimateRoutes fetchArgomentiPerCorso={fetchArgomentiPerCorso} fetchCorsoPrp={fetchCorso}/>
         </div>
       </Box>
     </>
