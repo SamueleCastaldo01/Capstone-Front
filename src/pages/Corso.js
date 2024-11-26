@@ -14,7 +14,12 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import CloseIcon from '@mui/icons-material/Close';
 import { successNoty, errorNoty } from '../components/Notify';
+import QuizIcon from '@mui/icons-material/Quiz';
 import Autocomplete from '@mui/material/Autocomplete';
+import Select from '@mui/material/Select';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
 
 function Corso() {
 
@@ -34,11 +39,13 @@ function Corso() {
   const [domandaCorretta, setDomandaCorretta] = useState(""); 
   const [idArgomentoSelected, setIdArgomentoSelected] = useState(""); 
   
+  const [selectFilter, setSelectFilter] = React.useState(0);
 
   const [coloreCopertina, setColoreCopertina] = useState('');
   const [open, setOpen] = React.useState(false);
   const [corso, setCorso] = useState([]);
   const [argomenti, setArgomenti] = useState([]);
+  const [domande, setDomande] = useState([]);
   const { id } = useParams();
 
   const token = localStorage.getItem('authToken');
@@ -48,6 +55,11 @@ function Corso() {
   localStorage.setItem("naviBottom", 0);
 
   let navigate = useNavigate();
+
+  const handleChangeFilter = (event) => {
+    setSelectFilter(event.target.value);
+    fetchDomandePerCorso(id, event.target.value)
+  };
 
   //Get--------------------------------------------------------------
     // Funzione per la GET request
@@ -68,7 +80,8 @@ function Corso() {
           setNomeCorso(data.nomeCorso)
           setColoreCopertina(data.coloreCopertina)
           setLoading(false); 
-          fetchArgomentiPerCorso(id)
+          fetchArgomentiPerCorso(id);
+          fetchDomandePerCorso(id, 0);
         } else {
           throw new Error('Errore nel recupero dei dati');
         }
@@ -89,11 +102,32 @@ function Corso() {
           });
           const data = await response.json();
           setArgomenti(data);
-          console.log(argomenti)
         } catch (err) {
             
         }
       };
+
+    const fetchDomandePerCorso = async (idCorso, select) => {
+      let str= "";
+      if(select == 0) {
+        str = "corso/" + idCorso
+      } else {
+        str = "argomento/" + select
+        console.log(select)
+      }
+      try {
+        const response = await fetch("http://localhost:3001/domanda/" +str, {
+          headers: {
+            'Authorization': `Bearer ${token}`, 
+            'Content-Type': 'application/json',
+          },
+        });
+        const data = await response.json();
+        setDomande(data);
+      } catch (err) {
+          
+      }
+    };
 
     useEffect(() => {
         fetchCorso(id);
@@ -125,7 +159,7 @@ function Corso() {
       } catch (err) {
         console.error('Errore:', err);
         setError(err.message); // Mostra l'errore
-        alert('Errore nel salvataggio del contenuto');
+
       }
     };
 
@@ -149,13 +183,45 @@ function Corso() {
             const data = await response.json();
             successNoty("Argomento creato :)")
             fetchArgomentiPerCorso(id)
+            setTitoloArgomento("");
           } else {
             throw new Error('Errore nel salvataggio');
           }
         } catch (err) {
           console.error('Errore:', err);
           setError(err.message); // Mostra l'errore
-          alert('Errore nel salvataggio del contenuto');
+        }
+      };
+
+      //------------------------------------------------------------------------------------------
+      const handleSaveDomanda = async () => {
+        try {
+          const response = await fetch('http://localhost:3001/domanda', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json', 
+              'Authorization': `Bearer ${token}`, 
+            },
+            body: JSON.stringify({
+              domanda: domanda, 
+              id_argomento: idArgomentoSelected, 
+              rispostaDomanda: domandaCorretta,
+
+            }),
+          });
+    
+          if (response.ok) {
+            const data = await response.json();
+            successNoty("Argomento creato :)")
+            setDomanda("");
+            setDomandaCorretta("");
+            fetchDomandePerCorso(id, 0)
+          } else {
+            throw new Error('Errore nel salvataggio');
+          }
+        } catch (err) {
+          console.error('Errore:', err);
+          setError(err.message); // Mostra l'errore
         }
       };
 
@@ -239,8 +305,9 @@ function Corso() {
                   <Button onClick={() => {handleSave()}} variant="contained">Modifica</Button>
             </div>
             
+               {/***I miei argomenti ++++++++++++++++++++++++++++++++++++++++++++++++++ */}
               <div>
-                 <div className='mt-5 d-flex align-items-center gap-2'>
+                 <div className='mt-5 d-flex align-items-center gap-2 pt-2' style={{borderTop: "3px solid #771AA9"}}>
                   <h3 className='mb-0'>I miei argomenti</h3>
                     <IconButton onClick= {() => {setFlagArgomenti(!flagArgomenti)}}>
                       {flagArgomenti ? <ExpandLessIcon /> : <ExpandMoreIcon/>}
@@ -248,46 +315,91 @@ function Corso() {
                  </div>
                   <Collapse in={flagArgomenti} timeout="auto" unmountOnExit>
                     <div className='mt-3 ps-3'>
-                      {argomenti.map((argomento) => {
-                        return (
-                          <div className='d-flex align-items-center mb-4' key={argomento.id}>
-                            <IconButton className='p-0'><BookmarkIcon style={{color: "black"}}/></IconButton>
-                            <h5 onClick={() => {navigate("/argomento/" + argomento.id)}} className='mb-0 fakeLink'>{argomento.titolo}</h5>
-                          </div>
-                        )
-                      })
-                      }
-                      <div className='d-flex align-items-center gap-3 ps-1'>
-                      <TextField 
-                        value={titoloArgomento}
-                        onChange={(event) => setTitoloArgomento(event.target.value)}
-                        label="Aggiungi un Argomento"
-                        style={{ width: "350px" }}
-                        InputProps={{ style: { fontSize: "20px" } }} 
-                        InputLabelProps={{ style: { fontSize: "20px" } }}
-                      />
-                        <Button onClick={() => {handleSaveArgomento()}} variant="contained">Aggiungi</Button>
+                      <div className=''>
+                        {argomenti.map((argomento) => {
+                          return (
+                            <div className='d-flex align-items-center mb-3 selctedDiv' key={argomento.id}>
+                              <IconButton className='p-0'><BookmarkIcon style={{color: "black"}}/></IconButton>
+                              <h5 onClick={() => {navigate("/argomento/" + argomento.id)}} className='mb-0 fakeLink'>{argomento.titolo}</h5>
+                            </div>
+                          )
+                        })
+                        }
+                      </div>
+                      <div className='pt-3' >
+                        <div>
+                          <h6>Aggiungi un Argomento per questa Materia</h6>
+                        </div>
+                        <div className='d-flex align-items-center gap-3 ps-1'>
+                            <TextField 
+                            value={titoloArgomento}
+                            onChange={(event) => setTitoloArgomento(event.target.value)}
+                            label="Aggiungi un Argomento"
+                            style={{ width: "350px" }}
+                            InputProps={{ style: { fontSize: "20px" } }} 
+                            InputLabelProps={{ style: { fontSize: "20px" } }}
+                          />
+                            <Button onClick={() => {handleSaveArgomento()}} variant="contained">Aggiungi</Button>
+                        </div>
+           
                       </div>
                     </div>
                   </Collapse>  
                </div>
 
+                {/***Le mie domande ++++++++++++++++++++++++++++++++++++++++++++++++++ */}
                 <div>
-                  <div className='mt-5 d-flex align-items-center'>
-                    <h3 className='mb-0'>Le mie Domande</h3>
-                    <IconButton onClick= {() => {setFlagDomande(!flagDomande)}}>
-                      {flagDomande ? <ExpandLessIcon /> : <ExpandMoreIcon/>}
-                    </IconButton>
+                  <div className='d-flex align-items-center justify-content-between mt-5  pt-2' style={{borderTop: "3px solid #771AA9"}}>
+                    <div className='d-flex align-items-center'>
+                      <h3 className='mb-0'>Le mie Domande</h3>
+                      <IconButton onClick= {() => {setFlagDomande(!flagDomande)}}>
+                        {flagDomande ? <ExpandLessIcon /> : <ExpandMoreIcon/>}
+                      </IconButton>
+                    </div>
+               
+                    <div className="w-25">
+                      <FormControl fullWidth>
+                        <InputLabel id="demo-simple-select-label">Filtro Domande</InputLabel>
+                        <Select
+                          labelId="demo-simple-select-label"
+                          id="demo-simple-select"
+                          value={selectFilter}
+                          label="Filtro Domande"
+                          onChange={handleChangeFilter}
+                        >
+                          <MenuItem value={0}>Questo Corso</MenuItem>
+                          {argomenti.map((argomento) => {
+                            return(
+                              <MenuItem value={argomento.id}>{argomento.titolo}</MenuItem>
+                            )
+                          })}
+                        </Select>
+                      </FormControl>
+                    </div>
                   </div>
                   
                   <div className='mt-3 ps-3'>
                     <Collapse in={flagDomande} timeout="auto" unmountOnExit>
-                    </Collapse>
-                    <div className='d-flex flex-column ps-1 gap-4'>
+                      {domande.map((domanda) => {
+                          return (
+                            <div className=' mb-3' key={domanda.id}>
+                              <div className='d-flex align-items-center selctedDiv'>
+                                <IconButton className='p-0'><QuizIcon style={{color: "black"}}/></IconButton>
+                                <h5  className='mb-0 '>{domanda.domanda}</h5>
+                              </div>
+                              <p className='mb-0 ps-3'><b style={{color: "#008f39"}}>Risposta corretta:</b> {domanda.rispostaDomanda}</p>
+                            </div>
+                          )
+                        })
+                      }
+                    
+                    
+                      <h6 className='mt-4'>Aggiungi una Domanda per questa Materia</h6>
+                      <div className='d-flex flex-column ps-1 gap-4'>
                       <TextField 
                           value={domanda}
                           onChange={(event) => setDomanda(event.target.value)}
-                          label="Aggiungi la Domanda"
+                          label="Aggiungi una Domanda"
                           style={{ width: "80%" }}
                           InputProps={{ style: { fontSize: "20px" } }} 
                           InputLabelProps={{ style: { fontSize: "20px" } }} 
@@ -325,16 +437,17 @@ function Corso() {
                         }}
                       />
                       <div className='mt-3'>
-                        <Button onClick={() => {""}} variant="contained">Aggiungi</Button>
+                        <Button onClick={() => {handleSaveDomanda()}} variant="contained">Aggiungi</Button>
                       </div>
                 
                     </div>
+                    </Collapse>
                   </div>
-      
-     
                 </div>
+
+
                 {/***Delete ++++++++++++++++++++++++++++++++++++++++++++++++++ */}
-                <div className='mt-5 text-center'>
+                <div className='mt-5 text-center pb-2'>
                   {flagDelete &&
                   <div className='pt-2' style={{borderTop: "3px solid red"}}>
                       <div className='d-flex justify-content-between'>

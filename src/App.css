@@ -17,17 +17,7 @@ body {
   margin-bottom: 0px;
 }
 
-.MuiDataGrid-menuList {
-  background-color: black;
-}
 
-.MuiDataGrid-filterForm {
-  background-color: black;
-}
-
-.MuiMenu-list {
-  background-color: black;
-}
 
 :root {
   --light: #eee;
@@ -166,5 +156,19 @@ margin: 0;
 .fakeLink {
   cursor: pointer; 
   text-decoration: underline;
+}
+
+.selctedDiv{
+  display: inline-flex;
+  width: fit-content;
+  padding: 8px;
+  padding-right: 15px;
+  border-radius: 10px;
+  background-color: #F1F1F1;
+  cursor: pointer;
+}
+
+.selctedDiv:hover {
+  background-color: #E7E7E7;
 }
 

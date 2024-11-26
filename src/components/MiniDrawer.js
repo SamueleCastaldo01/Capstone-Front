@@ -114,7 +114,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 
 const ListItemCus = styled(ListItem)({
   padding: '10px 15px', 
-  fontSize: '1.2rem',    
+  fontSize: '1.1rem',    
   
 });
 
@@ -422,7 +422,7 @@ useEffect(() => {
           <ListItemButton onClick={() => {navigate(`/`);}} style={{ borderRadius: "10px", backgroundColor: isHomeActive ? '#E7E7E7' : 'transparent' }} >
               <ListItemText
                 primary={"Home"}
-                primaryTypographyProps={{ fontSize: '20px',
+                primaryTypographyProps={{ fontSize: '18px',
                   fontWeight: isHomeActive ? 'bold' : 'normal', 
                  }}
                 sx={{ opacity: 1 }}
@@ -434,7 +434,7 @@ useEffect(() => {
               <ListItemText
                 onClick={() => {navigate(`/flashcard`);}}
                 primary={"Flash Card"}
-                primaryTypographyProps={{ fontSize: '20px',
+                primaryTypographyProps={{ fontSize: '18px',
              
                  }}
                 sx={{ opacity: 1 }}
@@ -446,7 +446,7 @@ useEffect(() => {
               <ListItemText
                 onClick={() => {navigate(`/`);}}
                 primary={"Tecnica Del Pomodoro"}
-                primaryTypographyProps={{ fontSize: '20px',
+                primaryTypographyProps={{ fontSize: '18px',
               
                  }}
                 sx={{ opacity: 1 }}
@@ -458,7 +458,7 @@ useEffect(() => {
               <ListItemText
                 onClick={() => {navigate(`/`);}}
                 primary={"Mappa Concettuale"}
-                primaryTypographyProps={{ fontSize: '20px',
+                primaryTypographyProps={{ fontSize: '18px',
             
                  }}
                 sx={{ opacity: 1 }}
@@ -475,7 +475,7 @@ useEffect(() => {
             >
               <ListItemText
                 primary="I miei Appunti"
-                primaryTypographyProps={{ fontSize: '22px', fontWeight: isMaterieOpen ? "bold" : "" }}
+                primaryTypographyProps={{ fontSize: '20px', fontWeight: isMaterieOpen ? "bold" : "" }}
                 sx={{ opacity: 1  }}
               />
               {isMaterieOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}
@@ -511,7 +511,7 @@ useEffect(() => {
               <ListItemText
                 primary={corso.nomeCorso}
                 primaryTypographyProps={{
-                  fontSize: '20px',
+                  fontSize: '19px',
                   fontWeight: isSelectedCorso ? 'bold' : 'normal',
                 }}
                 sx={{ opacity: 1 }}
@@ -541,7 +541,7 @@ useEffect(() => {
                           <ListItemText
                             primary={argomento.titolo}
                             primaryTypographyProps={{
-                              fontSize: '18px',
+                              fontSize: '17px',
                               fontWeight: isSelectedArgomento ? 'bold' : 'normal',
                             }}
                           />
