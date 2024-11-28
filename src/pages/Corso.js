@@ -15,6 +15,7 @@ import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import CloseIcon from '@mui/icons-material/Close';
 import { successNoty, errorNoty } from '../components/Notify';
 import QuizIcon from '@mui/icons-material/Quiz';
+import PsychologyAltIcon from '@mui/icons-material/PsychologyAlt';
 import Autocomplete from '@mui/material/Autocomplete';
 import Select from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
@@ -322,10 +323,18 @@ function Corso({fetchArgomentiPerCorso, fetchCorsoPrp}) {
                       <div className=''>
                         {argomenti.map((argomento) => {
                           return (
-                            <div className='d-flex align-items-center mb-3 selctedDiv' key={argomento.id}>
-                              <IconButton className='p-0'><BookmarkIcon style={{color: "black"}}/></IconButton>
-                              <h5 onClick={() => {navigate("/argomento/" + argomento.id)}} className='mb-0 fakeLink'>{argomento.titolo}</h5>
+                            <>
+                            <div className='d-flex gap-2 align-items-center mb-3'>
+                              <div className='d-flex align-items-center selctedDiv' key={argomento.id}>
+                                <IconButton className='p-0'><BookmarkIcon style={{color: "black"}}/></IconButton>
+                                <h5 onClick={() => {navigate("/argomento/" + argomento.id)}} className='mb-0 fakeLink'>{argomento.titolo}</h5>
+                              </div>
+                              <div className='selctedDiv'>
+                                <IconButton className='p-0' onClick={() => {navigate("/flashcard/" + argomento.id)}}><PsychologyAltIcon style={{color: "black"}}/></IconButton>
+                              </div>
+                            
                             </div>
+                            </>
                           )
                         })
                         }

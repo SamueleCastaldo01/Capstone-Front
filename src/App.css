@@ -172,3 +172,41 @@ margin: 0;
   background-color: #E7E7E7;
 }
 
+.divBigFla{
+  width: 90%;
+  margin-top: 80px;
+  min-height: 250px;
+}
+
+.divFlash{
+  background-color: #F1F1F1;
+  width: 100%;
+  user-select: none;
+  min-height: 250px;
+  padding: 15px;
+  border-radius: 20px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.divFlash:hover{
+  background-color: #E7E7E7;
+}
+
+.buttonFlash{
+  width: 20%;
+  height: 60px;
+}
+
+.divButtonFlash{
+  width: 70%;
+}
+
+@media (max-width: 768px) {
+  .divButtonFlash{
+    width: 90%;
+  }
+  .buttonFlash{
+    height: 45px;
+  }
+  
+}

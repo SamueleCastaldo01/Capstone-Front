@@ -14,6 +14,7 @@ import { MyAccount } from '../pages/MyAccount';
 import Argomento from '../pages/Argomento';
 import AddCorso from '../pages/AddCorso';
 import Corso from '../pages/Corso';
+import FlashCard from '../pages/FlashCard';
 
 
 function AnimateRoutes ({fetchArgomentiPerCorso, fetchCorsoPrp})  {
@@ -34,7 +35,8 @@ return (
       <Route path="/argomento/:id" element={<Argomento fetchArgomentiPerCorso= {fetchArgomentiPerCorso}/>} /> 
       <Route path="/corso/:id" element={<Corso fetchArgomentiPerCorso= {fetchArgomentiPerCorso} fetchCorsoPrp={fetchCorsoPrp}/>} /> 
       <Route path="/myaccount" element={<MyAccount />} /> 
-      <Route path="/addCorso" element={<AddCorso fetchCorsoPrp={fetchCorsoPrp}/>} /> 
+      <Route path="/addcorso" element={<AddCorso fetchCorsoPrp={fetchCorsoPrp}/>} /> 
+      <Route path="/flashcard/:id" element={<FlashCard/>} /> 
     </Route>
  
         
