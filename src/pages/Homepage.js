@@ -109,8 +109,8 @@ function Homepage() {
               <div style={{paddingTop: "250px"}}>
               </div>
             </div>
-            <div className='homeMaterie' onClick={() => {navigate("/addcorso")}}>
-              <h2>Test</h2>
+            <div className='homeMaterie' onClick={() => {navigate("/flashcard")}}>
+              <h2>FlashCard</h2>
               <div style={{paddingTop: "250px"}}>
               </div>
             </div>

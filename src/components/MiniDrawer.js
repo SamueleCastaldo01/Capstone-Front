@@ -145,6 +145,7 @@ export default function MiniDrawer( {signUserOut, fetchArgomentiPerCorsoPrp, arg
   const location= useLocation();
   const currentArgomentoId = location.pathname.split('/').pop();
   const isHomeActive = location.pathname === "/";
+  const isFlashCardActive = location.pathname === "/flashcard";
   const { corsoId } = useParams(); 
 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -402,12 +403,12 @@ useEffect(() => {
             </ListItemButton>
           </ListItemCus>
           <ListItemCus>
-          <ListItemButton style={{ borderRadius: "10px" }} >
+          <ListItemButton style={{ borderRadius: "10px",  backgroundColor: isFlashCardActive ? '#E7E7E7' : 'transparent' }} >
               <ListItemText
                 onClick={() => {navigate(`/flashcard`);}}
                 primary={"Flash Card"}
                 primaryTypographyProps={{ fontSize: '18px',
-             
+                fontWeight: isFlashCardActive ? 'bold' : 'normal', 
                  }}
                 sx={{ opacity: 1 }}
               />
@@ -419,7 +420,7 @@ useEffect(() => {
                 onClick={() => {navigate(`/`);}}
                 primary={"Tecnica Del Pomodoro"}
                 primaryTypographyProps={{ fontSize: '18px',
-              
+                  
                  }}
                 sx={{ opacity: 1 }}
               />

@@ -129,14 +129,44 @@ margin: 0;
   font-weight: bold;
 }
 
-.addAppunti, .homeMaterie {
+.scroll-container {
+  height: 70vh;
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 10px;
+  cursor: grab; /* Feedback visivo */
+}
+
+.scroll-container:active {
+  cursor: grabbing; /* Durante il drag */
+}
+
+.scroll-container::-webkit-scrollbar {
+  display: none; 
+}
+
+.addAppunti, .homeMaterie, .flashIndex {
   border: 1px dashed black;
   padding: 80px 10px 210px 10px;
-  margin: 0 auto;
   text-align: center;
   width: 350px; 
   border-radius: 10px;
   box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
+  flex-shrink: 0;
+}
+
+.flashIndex {
+  display: inline-block;
+  user-select: none;
+  width: 350px;
+  border: 1px white;
+  padding: 80px 10px 0px 10px;
+  height: 500px;
+  text-align: center;
+  border-radius: 10px;
+  box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
+  flex-shrink: 0;
 }
 
 .homeMaterie {
@@ -146,10 +176,8 @@ margin: 0;
   
 }
 
-.homeMaterie:hover {
-}
 
-.addAppunti:hover {
+.addAppunti:hover, .flashIndex:hover {
   background-color: #F1F1F1;
 }
 

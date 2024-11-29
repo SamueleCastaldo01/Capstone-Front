@@ -9,6 +9,7 @@ import { IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { errorNoty, successNoty } from '../components/Notify';
 import TextField from '@mui/material/TextField';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import CircularProgress from '@mui/material/CircularProgress';
 import { motion } from 'framer-motion';
 
@@ -218,9 +219,21 @@ function FlashCard() {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.7 }}>
         <div className='px-4 pt-3 px-lg-0 divPrincipale'>
-            <div className='d-flex flex-column align-items-center justify-content-center'>
-               <h1 className='fakeLink' onClick={() => {navigate("/corso/" + idCorso)}}>{nomeCorso}</h1>
-               <h3 className='fakeLink' onClick={() => {navigate("/argomento/" + idArgomento)}}>{titoloArgomento}</h3>
+          <div className='d-flex gap-1 align-items-center'>
+            <IconButton onClick={() => {navigate("/flashcard")}}>
+              <ArrowBackIosIcon style={{color: "black"}} />
+            </IconButton>
+            <h1 onClick={() => {navigate("/flashcard")}} className='mb-0 cursor-pointer'>FlashCard</h1>
+          </div>
+
+            <div className='mt-5 d-flex flex-column align-items-center justify-content-center'>
+              {idCorsoParm == 0 ?
+              <h2 className='fakeLink' onClick={() => {navigate("/corso/" + idCorso)}}>{nomeCorso}</h2>
+              :
+              <h2 className='fakeLink' onClick={() => {navigate("/corso/" + idCorsoParm)}}>{nomeCorso}</h2>
+              }
+               
+               <h4 className='fakeLink' onClick={() => {navigate("/argomento/" + idArgomento)}}>{titoloArgomento}</h4>
 
 
                {loadingDomande ? (
@@ -228,12 +241,15 @@ function FlashCard() {
                 ) : currentQuestion ? (
                   <div className='divBigFla '>
                     <h5 className='text-center'>FlashCard: <b>{currentIndex + 1}/{domande.length}</b></h5>
-                    <div key={currentQuestion.id} className='divFlash d-flex flex-column justify-content-center text-center' onClick={() => {setFlagVedi(!flagVedi)}}>
+                    <div key={currentQuestion.id} className='divFlash d-flex flex-column justify-content-center text-center position-relative' onClick={() => {setFlagVedi(!flagVedi)}}>
                       { !flagVedi ?
+                      <>
+                        <h4 className=' position-absolute top-0' style={{color: "#D32F2F"}}>Domanda</h4>
                         <h3>{currentQuestion.domanda}</h3>
+                      </>
                       :
                       <>
-                        <h2>Risposta</h2>
+                        <h4 className=' position-absolute top-0' style={{color: "#008f39"}}>Risposta</h4>
                         <h3>{currentQuestion.rispostaDomanda}</h3>
                       </>
                       }

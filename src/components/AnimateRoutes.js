@@ -15,6 +15,7 @@ import Argomento from '../pages/Argomento';
 import AddCorso from '../pages/AddCorso';
 import Corso from '../pages/Corso';
 import FlashCard from '../pages/FlashCard';
+import FlashCardIndex from '../pages/FlashCardIndex';
 
 
 function AnimateRoutes ({fetchArgomentiPerCorso, fetchCorsoPrp})  {
@@ -37,6 +38,7 @@ return (
       <Route path="/myaccount" element={<MyAccount />} /> 
       <Route path="/addcorso" element={<AddCorso fetchCorsoPrp={fetchCorsoPrp}/>} /> 
       <Route path="/flashcard/:idArgomento/:idCorsoParm" element={<FlashCard/>} /> 
+      <Route path="/flashcard" element={<FlashCardIndex/>} /> 
     </Route>
  
         
