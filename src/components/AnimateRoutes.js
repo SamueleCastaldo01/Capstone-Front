@@ -36,7 +36,7 @@ return (
       <Route path="/corso/:id" element={<Corso fetchArgomentiPerCorso= {fetchArgomentiPerCorso} fetchCorsoPrp={fetchCorsoPrp}/>} /> 
       <Route path="/myaccount" element={<MyAccount />} /> 
       <Route path="/addcorso" element={<AddCorso fetchCorsoPrp={fetchCorsoPrp}/>} /> 
-      <Route path="/flashcard/:id" element={<FlashCard/>} /> 
+      <Route path="/flashcard/:idArgomento/:idCorsoParm" element={<FlashCard/>} /> 
     </Route>
  
         

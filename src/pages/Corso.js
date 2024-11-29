@@ -309,6 +309,10 @@ function Corso({fetchArgomentiPerCorso, fetchCorsoPrp}) {
               </div>
                   <Button onClick={() => {handleSave()}} variant="contained">Modifica</Button>
             </div>
+
+            <div className='mt-5 d-flex justify-content-between'>
+              <Button onClick={() => {navigate("/flashcard/0/" + id)}} style={{width: "15%", height: "60px"}} variant="contained" startIcon={<PsychologyAltIcon/>}>FlashCard</Button>
+            </div>
             
                {/***I miei argomenti ++++++++++++++++++++++++++++++++++++++++++++++++++ */}
               <div>
@@ -330,7 +334,7 @@ function Corso({fetchArgomentiPerCorso, fetchCorsoPrp}) {
                                 <h5 onClick={() => {navigate("/argomento/" + argomento.id)}} className='mb-0 fakeLink'>{argomento.titolo}</h5>
                               </div>
                               <div className='selctedDiv'>
-                                <IconButton className='p-0' onClick={() => {navigate("/flashcard/" + argomento.id)}}><PsychologyAltIcon style={{color: "black"}}/></IconButton>
+                                <IconButton className='p-0' onClick={() => {navigate("/flashcard/" + argomento.id + "/0")}}><PsychologyAltIcon style={{color: "black"}}/></IconButton>
                               </div>
                             
                             </div>

@@ -34,7 +34,8 @@ function FlashCard() {
   const [error, setError] = useState(null); 
   const [open, setOpen] = React.useState(false);
   const [argomento, setArgomento] = useState(null);
-  const { id } = useParams();
+  const { idArgomento } = useParams();
+  const { idCorsoParm } = useParams();
 
   const token = localStorage.getItem('authToken');
 
@@ -44,10 +45,18 @@ function FlashCard() {
   let navigate = useNavigate();
 
 
-  const fetchDomandePerCorso = async () => {
+  const fetchDomande = async () => {
     setLoadingDomande(true)
+    let str = ""
+    if(idArgomento != 0) {
+      str = "argomento/"  +idArgomento
+    } else if(idCorsoParm != 0) {
+      str = "corso/" + idCorsoParm
+    } else {
+      navigate("/")
+    }
     try {
-      const response = await fetch("http://localhost:3001/domanda/argomento/" + id , {
+      const response = await fetch("http://localhost:3001/domanda/" + str , {
         headers: {
           'Authorization': `Bearer ${token}`, 
           'Content-Type': 'application/json',
@@ -75,7 +84,6 @@ function FlashCard() {
         if (response.ok) {
           const data = await response.json();
           setArgomento(data); 
-          setValue(data.contenuto); 
           setTitoloArgomento(data.titolo);
           setNomeCorso(data.corso.nomeCorso);
           setIdCorso(data.corso.id);
@@ -90,15 +98,47 @@ function FlashCard() {
       }
     };
 
+    const fetchCorso = async () => {  
+      try {
+        const response = await fetch(`http://localhost:3001/corso/${idCorsoParm}`, {
+          method: 'GET', // Metodo GET per recuperare
+          headers: {
+            'Authorization': `Bearer ${token}`, // Bearer Token per l'autenticazione
+            'Content-Type': 'application/json', // Tipo di contenuto JSON
+          },
+        });
+  
+        if (response.ok) {
+          const data = await response.json();
+          setNomeCorso(data.nomeCorso);
+          setLoading(false); 
+        } else {
+          throw new Error('Errore nel recupero dei dati');
+        }
+      } catch (err) {
+        console.error('Errore:', err);
+        setError(err.message); 
+        setLoading(false); 
+      }
+    };
+
     useEffect(() => {
-      fetchDomandePerCorso();
-      fetchArgomento(id); 
-    }, [id]);
+      fetchDomande();
+      if(idArgomento != 0) {
+        fetchArgomento(idArgomento); 
+      } 
+      if(idCorsoParm != 0) {
+        fetchCorso();
+      }
+      
+    }, [idArgomento, idCorsoParm]);
 
     useEffect(() => {
       if (domande.length > 0) {
         setCurrentQuestion(domande[currentIndex]);
         controlloFlash(currentIndex)
+      } else {
+        setCurrentQuestion(null)
       }
     }, [domande, currentIndex]);
 
@@ -180,7 +220,7 @@ function FlashCard() {
         <div className='px-4 pt-3 px-lg-0 divPrincipale'>
             <div className='d-flex flex-column align-items-center justify-content-center'>
                <h1 className='fakeLink' onClick={() => {navigate("/corso/" + idCorso)}}>{nomeCorso}</h1>
-               <h3 className='fakeLink' onClick={() => {navigate("/argomento/" + id)}}>{titoloArgomento}</h3>
+               <h3 className='fakeLink' onClick={() => {navigate("/argomento/" + idArgomento)}}>{titoloArgomento}</h3>
 
 
                {loadingDomande ? (
@@ -205,7 +245,7 @@ function FlashCard() {
                   <div className='mt-5 text-center'>
                      <h5>Non ci sono domande disponibili.</h5>
                      <h5>Riprova più tardi, nell'attesa studia altro oppure rilassati</h5>
-                     <Button variant="contained" onClick={() => {fetchDomandePerCorso(); setCurrentIndex(0)}}>Ricarica</Button>
+                     <Button variant="contained" onClick={() => {fetchDomande(); setCurrentIndex(0)}}>Ricarica</Button>
                   </div>
                  
                 )}

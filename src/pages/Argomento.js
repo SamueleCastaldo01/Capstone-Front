@@ -9,7 +9,10 @@ import { IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { errorNoty, successNoty } from '../components/Notify';
 import TextField from '@mui/material/TextField';
+import SaveIcon from '@mui/icons-material/Save';
+import PsychologyAltIcon from '@mui/icons-material/PsychologyAlt';
 import { motion } from 'framer-motion';
+
 
 function Argomento({fetchArgomentiPerCorso}) {
 
@@ -177,9 +180,15 @@ const handleDelete = () => {
             <h6 onClick={() => {navigate("/corso/" + idCorso)}} className='mb-0 fakeLink'>{nomeCorso}</h6>
             <div className='d-flex align-items-center justify-content-between'>
                 <input style={{border: "none", fontSize: "40px", fontWeight:"bolder", width: "70%"}} value={titoloArgomento} onChange={(event) => setTitoloArgomento(event.target.value)} />
-                <Button variant="contained" color="primary" onClick={handleSave}>
-                    Salva
-                </Button>
+                <div className='d-flex gap-2'>
+                  <Button variant="contained" color="primary" onClick={() => {navigate("/flashcard/" + id + "/0")}} startIcon={<PsychologyAltIcon/>}>
+                      FlashCard
+                  </Button>
+                  <Button variant="contained" color="primary" onClick={handleSave} startIcon={<SaveIcon/>}>
+                      Salva
+                  </Button>
+                </div>
+              
             </div>
        
           <div className='mt-1 d-flex flex-column gap-3 justify-content-start'>
