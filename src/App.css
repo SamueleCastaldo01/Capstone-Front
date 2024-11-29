@@ -43,6 +43,10 @@ margin: 0;
   transition: none;
 }
 
+.cursor-pointer{
+  cursor: pointer;
+}
+
 
 .transparentInput .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline {
   border-color: gray; /* Colore del bordo */
@@ -206,7 +210,8 @@ margin: 0;
     width: 90%;
   }
   .buttonFlash{
-    height: 45px;
+    height: 60px;
+    width: 110px;
   }
   
 }

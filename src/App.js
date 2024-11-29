@@ -163,13 +163,11 @@ function AppContent({ signUserOut, matches }) {
         },
       });
       const data = await response.json();
-      console.log("Sono entrato brooo")
       setArgomenti((prev) => {
         const updated = { ...prev, [idCorso]: data };
         localStorage.setItem('argomenti', JSON.stringify(updated));
         return updated;
       });
-      console.log(argomenti)
     } catch (err) {
 
     }

@@ -98,6 +98,7 @@ function FlashCard() {
     useEffect(() => {
       if (domande.length > 0) {
         setCurrentQuestion(domande[currentIndex]);
+        controlloFlash(currentIndex)
       }
     }, [domande, currentIndex]);
 
@@ -133,12 +134,39 @@ function FlashCard() {
     };
 
     const nextQuestion = (difficolta) => {
-      fetchEditDomanda(difficolta)
+      fetchEditDomanda(difficolta)  //aggiorna la domanda
       setFlagVedi(false)
-      if (currentIndex < domande.length - 1) {
-          setCurrentIndex(currentIndex + 1);
-      }
+
+      controlloFlash(currentIndex + 1)
+    
   };
+
+  const controlloFlash = (tentativo) => {
+    let flagCiclo = false
+        //qui devo fare un ulteriore controllo e vedere questa domanda può essere visualizzata, altrimenti passa alla prossima
+        //fin quando non trova una disponibile, quindi cmq devo fare una sorta di ciclo, un do while
+        while(!flagCiclo) {
+          if (tentativo <= domande.length - 1) { //prima di tutto deve fare il controllo che non sia superato l'array
+          const dataModificaDifficolta = domande[tentativo].dataModificaDifficolta;
+          const ritardoMinuti = domande[tentativo].ritardo; 
+          const ritardoMillisecondi = ritardoMinuti * 60 * 1000;
+          const dataModificaMillisecondi = new Date(dataModificaDifficolta).getTime();
+          const nuovaDataTimestamp  = dataModificaMillisecondi + ritardoMillisecondi;
+          const dataAttuale = Date.now(); 
+          if(dataAttuale > nuovaDataTimestamp) {  //in questo caso vuol dire che lo posso visualizzare
+            flagCiclo = true;
+          } else {   //altrimenti deve passare al successivo attraverso il ciclo
+            tentativo = tentativo + 1
+          }
+        } else {
+          flagCiclo = true;
+          tentativo = tentativo
+          setCurrentQuestion(null)
+        }
+        }
+    setCurrentIndex(tentativo)
+
+  }
 
   return (
     <>
@@ -151,15 +179,15 @@ function FlashCard() {
         transition={{ duration: 0.7 }}>
         <div className='px-4 pt-3 px-lg-0 divPrincipale'>
             <div className='d-flex flex-column align-items-center justify-content-center'>
-               <h1>{nomeCorso}</h1>
-               <h3>{titoloArgomento}</h3>
+               <h1 className='fakeLink' onClick={() => {navigate("/corso/" + idCorso)}}>{nomeCorso}</h1>
+               <h3 className='fakeLink' onClick={() => {navigate("/argomento/" + id)}}>{titoloArgomento}</h3>
 
 
                {loadingDomande ? (
                   <CircularProgress />
                 ) : currentQuestion ? (
                   <div className='divBigFla '>
-                    <h5 className='text-center'>FlashCard: <b>{currentIndex + 1}/</b></h5>
+                    <h5 className='text-center'>FlashCard: <b>{currentIndex + 1}/{domande.length}</b></h5>
                     <div key={currentQuestion.id} className='divFlash d-flex flex-column justify-content-center text-center' onClick={() => {setFlagVedi(!flagVedi)}}>
                       { !flagVedi ?
                         <h3>{currentQuestion.domanda}</h3>
@@ -174,15 +202,22 @@ function FlashCard() {
                   </div>
               
                 ) : (
-                  <p>Non ci sono domande disponibili.</p>
-                )}
-                     
-                  <div className='mt-5 divButtonFlash d-flex justify-content-between'>
-                  <Button className='buttonFlash' style={{backgroundColor: "#8300E9"}} variant="contained" onClick={() => {nextQuestion("ripeti")}}>Ripeti</Button>
-                  <Button className='buttonFlash' style={{backgroundColor: "#6E22ED"}} variant="contained" onClick={() => {nextQuestion("difficile")}}>Difficile</Button>
-                  <Button className='buttonFlash' style={{backgroundColor: "#5A44F1"}} variant="contained" onClick={() => {nextQuestion("normale")}}>Normale</Button>
-                  <Button className='buttonFlash' style={{backgroundColor: "#3B76F7"}} variant="contained" onClick={() => {nextQuestion("facile")}}>Facile</Button>
+                  <div className='mt-5 text-center'>
+                     <h5>Non ci sono domande disponibili.</h5>
+                     <h5>Riprova più tardi, nell'attesa studia altro oppure rilassati</h5>
+                     <Button variant="contained" onClick={() => {fetchDomandePerCorso(); setCurrentIndex(0)}}>Ricarica</Button>
                   </div>
+                 
+                )}
+                  {flagVedi &&
+                    <div className='mt-5 divButtonFlash d-flex justify-content-between'>
+                    <Button className='buttonFlash' style={{backgroundColor: "#8300E9"}} variant="contained" onClick={() => {nextQuestion("ripeti")}}>Ripeti<br/>1 minuto</Button>
+                    <Button className='buttonFlash' style={{backgroundColor: "#6E22ED"}} variant="contained" onClick={() => {nextQuestion("difficile")}}>Difficile<br/> 5 minuti</Button>
+                    <Button className='buttonFlash' style={{backgroundColor: "#5A44F1"}} variant="contained" onClick={() => {nextQuestion("normale")}}>Normale<br/> 15 minuti</Button>
+                    <Button className='buttonFlash' style={{backgroundColor: "#3B76F7"}} variant="contained" onClick={() => {nextQuestion("facile")}}>Facile<br/> 1 ora</Button>
+                    </div>
+                  }   
+              
                        
               
             </div>
