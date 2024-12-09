@@ -2,10 +2,13 @@ import React, { useRef } from 'react';
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from 'react-redux';
 import { loginU } from '../redux/reducers/authSlice';
+import { successNoty, errorNoty } from '../components/Notify';
 
 function Login() {
   const dispatch = useDispatch();
   let navigate = useNavigate();  
+  const API = process.env.REACT_APP_BACKEND;
+
 
   const emailRef = useRef();
   const passwordRef = useRef();
@@ -21,7 +24,7 @@ function Login() {
     };
 
     try {
-      const response = await fetch('http://localhost:3001/auth/login', {
+      const response = await fetch(API +  '/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -29,22 +32,27 @@ function Login() {
         body: JSON.stringify(userData)
       });
 
-      const result = await response.json();
+      const data = await response.json();
 
 
       if (response.ok) {
         localStorage.setItem("profilePic", 'http://res.cloudinary.com/dk15nwyte/image/upload/v1731681603/zeepxk1lwrftzphsf19d.jpg');
-        localStorage.setItem('authToken', result.accessToken);
+        localStorage.setItem('authToken', data.accessToken);
         localStorage.setItem("isAuth", true);
-        console.log(result.accessToken)
-        dispatch(loginU(result.token));  // Usa il tuo reducer per il login, se necessario
+        dispatch(loginU(data.token));  // Usa il tuo reducer per il login, se necessario
+        successNoty("Credenziali Valide")
         navigate("/");
       } else {
-        alert("Credenziali non valide. Riprova.");
+        errorNoty(
+          data.message
+        );
       }
     } catch (error) {
+   
+      errorNoty(
+        error.message
+      );
       console.error('Errore nella connessione:', error);
-      alert('Errore nella connessione. Riprova.');
     }
   }
 

@@ -29,6 +29,7 @@ import Collapse from '@mui/material/Collapse';
 import { useLocation } from 'react-router-dom'; 
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+import { successNoty, errorNoty } from './Notify';
 
 const drawerWidth = 400;
 
@@ -132,7 +133,8 @@ export default function MiniDrawer( {signUserOut, fetchArgomentiPerCorsoPrp, arg
   const [notiMessPA, setNotiMessPA] = useState(false);  //flag per far comparire il messaggio
   const [anchorElNoty, setAnchorElNoty] = useState(null);
   const [notiPaId, setNotiPaId] = useState("7k5cx6hwSnQTCvWGVJ2z"); 
-
+  const API = process.env.REACT_APP_BACKEND;
+  
   const [corsi, setCorsi] = useState([]); 
   const [argomenti, setArgomenti] = useState({});
   const [loadingcorsi, setLoadingcorsi] = useState(true); 
@@ -214,7 +216,7 @@ export default function MiniDrawer( {signUserOut, fetchArgomentiPerCorsoPrp, arg
 
   const fetchArgomentiPerCorso = async (idCorso) => {
     try {
-      const response = await fetch(`http://localhost:3001/argomento/corso/${idCorso}`, {
+      const response = await fetch(API + `/argomento/corso/${idCorso}`, {
         headers: {
           'Authorization': `Bearer ${token}`, 
           'Content-Type': 'application/json',
@@ -232,7 +234,7 @@ export default function MiniDrawer( {signUserOut, fetchArgomentiPerCorsoPrp, arg
   const updateArgomentiPerCorso = async (idCorso) => {
     try {
       console.log("sono entrato")
-      const response = await fetch(`http://localhost:3001/argomento/corso/${idCorso}`, {
+      const response = await fetch(API + `/argomento/corso/${idCorso}`, {
         headers: {
           'Authorization': `Bearer ${token}`, 
           'Content-Type': 'application/json',

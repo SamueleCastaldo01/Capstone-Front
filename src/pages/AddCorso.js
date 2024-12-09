@@ -16,6 +16,8 @@ function AddCorso({fetchCorsoPrp}) {
   const [coloreCopertina, setColoreCopertina] = useState('');
   const [loading, setLoading] = useState(true); // Per gestire il loading
   const [error, setError] = useState(null); 
+  const API = process.env.REACT_APP_BACKEND;
+
 
   const token = localStorage.getItem('authToken');
 
@@ -28,7 +30,7 @@ function AddCorso({fetchCorsoPrp}) {
 
   const handleSave = async () => {
     try {
-      const response = await fetch('http://localhost:3001/corso', {
+      const response = await fetch(API + '/corso', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json', 
@@ -40,12 +42,17 @@ function AddCorso({fetchCorsoPrp}) {
         }),
       });
 
+      const data = await response.json();
+
       if (response.ok) {
-        const data = await response.json();
+        
         successNoty("Materia Creata correttamente")
         fetchCorsoPrp()
         navigate("/corso/" +data.id)
       } else {
+        errorNoty(
+          data.message
+        );
         throw new Error('Errore nel salvataggio');
       }
     } catch (err) {

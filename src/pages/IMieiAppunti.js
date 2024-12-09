@@ -5,9 +5,9 @@ import { useNavigate } from "react-router-dom";
 import { Button, IconButton } from "@mui/material";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import { motion } from "framer-motion";
-import { successNoty, errorNoty } from "../components/Notify";
+import { errorNoty, successNoty } from "../components/Notify";
 
-function FlashCardIndex() {
+function IMieiAppunti() {
 
   const [loading, setLoading] = useState(true); 
   const [error, setError] = useState(null); 
@@ -33,7 +33,8 @@ function FlashCardIndex() {
 
       const data = await response.json();
 
-      if (response.ok) {  
+      if (response.ok) {
+        
         setCorsi(data); 
         setLoading(false);
       } else {
@@ -91,7 +92,7 @@ function FlashCardIndex() {
                     onClick={() => navigate(-1)}
                     className="mb-0 cursor-pointer"
                 >
-                    FlashCard
+                    I Miei Appunti
                 </h1>
             </div>
 
@@ -111,12 +112,13 @@ function FlashCardIndex() {
             ) : (
                 corsi.map((corso) => (
                 <div
-                    className="flashIndex"
+                    className="flashIndex position-relative"
                     key={corso.id}
-                    onDoubleClick={() => navigate("/flashcard/0/" + corso.id)}
+                    onDoubleClick={() => navigate("/corso/" + corso.id)}
                     style={{ borderLeft: `50px solid ${corso.coloreCopertina}` }}
                 >
                     <h2 className="fakeLink" onClick={() => {navigate("/corso/" + corso.id)}}>{corso.nomeCorso}</h2>
+                    <Button onClick={() => {navigate("/flashcard/0/" + corso.id)}} className="position-absolute bottom-45" variant="contained"> FlashCard</Button>
                 </div>
                 ))
             )}
@@ -130,4 +132,4 @@ function FlashCardIndex() {
   );
 }
 
-export default FlashCardIndex;
+export default IMieiAppunti;

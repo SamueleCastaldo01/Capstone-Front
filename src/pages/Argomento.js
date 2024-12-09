@@ -22,6 +22,8 @@ function Argomento({fetchArgomentiPerCorso}) {
   const [idCorso, setIdCorso] = useState('');
   const [titoloArgomento, setTitoloArgomento] = useState(''); 
   const [nomeCorso, setNomeCorso] = useState(''); 
+  const API = process.env.REACT_APP_BACKEND;
+
 
   //eliminazione
   const [flagDelete, setFlagDelete] = useState(false); 
@@ -68,7 +70,7 @@ function Argomento({fetchArgomentiPerCorso}) {
 
   const handleSave = async () => {
     try {
-      const response = await fetch('http://localhost:3001/argomento/' + id, {
+      const response = await fetch(API + '/argomento/' + id, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json', 
@@ -81,11 +83,13 @@ function Argomento({fetchArgomentiPerCorso}) {
         }),
       });
 
+      const data = await response.json();
+
       if (response.ok) {
-        const data = await response.json();
         successNoty("Dati salvati :)")
         fetchArgomentiPerCorso(idCorso);
       } else {
+        errorNoty(data.message);
         throw new Error('Errore nel salvataggio');
       }
     } catch (err) {
@@ -97,16 +101,18 @@ function Argomento({fetchArgomentiPerCorso}) {
     // Funzione per la GET request
     const fetchArgomento = async (id) => {  
       try {
-        const response = await fetch(`http://localhost:3001/argomento/${id}`, {
+        const response = await fetch(API + `/argomento/${id}`, {
           method: 'GET', // Metodo GET per recuperare
           headers: {
             'Authorization': `Bearer ${token}`, // Bearer Token per l'autenticazione
             'Content-Type': 'application/json', // Tipo di contenuto JSON
           },
         });
+
+        const data = await response.json();
   
         if (response.ok) {
-          const data = await response.json();
+          
           setArgomento(data); 
           setValue(data.contenuto); 
           setTitoloArgomento(data.titolo);
@@ -114,6 +120,7 @@ function Argomento({fetchArgomentiPerCorso}) {
           setIdCorso(data.corso.id);
           setLoading(false); 
         } else {
+          errorNoty(data.message);
           throw new Error('Errore nel recupero dei dati');
         }
       } catch (err) {
@@ -132,13 +139,14 @@ function Argomento({fetchArgomentiPerCorso}) {
 //delete--------------------------------------------
 const deleteArgomento = async (id) => {  
   try {
-    const response = await fetch(`http://localhost:3001/argomento/${id}`, {
+    const response = await fetch(API + `/argomento/${id}`, {
       method: 'DELETE',
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json', 
       },
     });
+
     if (response.ok) {
         successNoty("Argomento Eliminato")
         fetchArgomentiPerCorso(idCorso);

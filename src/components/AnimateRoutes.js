@@ -16,6 +16,7 @@ import AddCorso from '../pages/AddCorso';
 import Corso from '../pages/Corso';
 import FlashCard from '../pages/FlashCard';
 import FlashCardIndex from '../pages/FlashCardIndex';
+import IMieiAppunti from '../pages/IMieiAppunti';
 
 
 function AnimateRoutes ({fetchArgomentiPerCorso, fetchCorsoPrp})  {
@@ -39,6 +40,7 @@ return (
       <Route path="/addcorso" element={<AddCorso fetchCorsoPrp={fetchCorsoPrp}/>} /> 
       <Route path="/flashcard/:idArgomento/:idCorsoParm" element={<FlashCard/>} /> 
       <Route path="/flashcard" element={<FlashCardIndex/>} /> 
+      <Route path="/imieiappunti" element={<IMieiAppunti/>} /> 
     </Route>
  
         

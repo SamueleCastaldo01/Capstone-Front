@@ -18,6 +18,8 @@ function FlashCard() {
   const [flagCont, setFlagCont] = React.useState(false);
 
   const [value, setValue] = useState('');
+  const API = process.env.REACT_APP_BACKEND;
+
   const [idCorso, setIdCorso] = useState('');
   const [titoloArgomento, setTitoloArgomento] = useState(''); 
   const [nomeCorso, setNomeCorso] = useState(''); 
@@ -57,7 +59,7 @@ function FlashCard() {
       navigate("/")
     }
     try {
-      const response = await fetch("http://localhost:3001/domanda/" + str , {
+      const response = await fetch(API + "/domanda/" + str , {
         headers: {
           'Authorization': `Bearer ${token}`, 
           'Content-Type': 'application/json',
@@ -74,22 +76,25 @@ function FlashCard() {
     // Funzione per la GET request
     const fetchArgomento = async (id) => {  
       try {
-        const response = await fetch(`http://localhost:3001/argomento/${id}`, {
+        const response = await fetch(API + `/argomento/${id}`, {
           method: 'GET', // Metodo GET per recuperare
           headers: {
             'Authorization': `Bearer ${token}`, // Bearer Token per l'autenticazione
             'Content-Type': 'application/json', // Tipo di contenuto JSON
           },
         });
+
+        const data = await response.json();
   
         if (response.ok) {
-          const data = await response.json();
+          
           setArgomento(data); 
           setTitoloArgomento(data.titolo);
           setNomeCorso(data.corso.nomeCorso);
           setIdCorso(data.corso.id);
           setLoading(false); 
         } else {
+          errorNoty(data.message);
           throw new Error('Errore nel recupero dei dati');
         }
       } catch (err) {
@@ -101,19 +106,21 @@ function FlashCard() {
 
     const fetchCorso = async () => {  
       try {
-        const response = await fetch(`http://localhost:3001/corso/${idCorsoParm}`, {
+        const response = await fetch(API + `/corso/${idCorsoParm}`, {
           method: 'GET', // Metodo GET per recuperare
           headers: {
             'Authorization': `Bearer ${token}`, // Bearer Token per l'autenticazione
             'Content-Type': 'application/json', // Tipo di contenuto JSON
           },
         });
+
+        const data = await response.json();
   
         if (response.ok) {
-          const data = await response.json();
           setNomeCorso(data.nomeCorso);
           setLoading(false); 
         } else {
+          errorNoty(data.message);
           throw new Error('Errore nel recupero dei dati');
         }
       } catch (err) {
@@ -147,7 +154,7 @@ function FlashCard() {
     //Edit Domanda----------------------------------------------------
     const fetchEditDomanda = async (difficolta) => {
       try {
-        const response = await fetch('http://localhost:3001/domanda/' + currentQuestion.id, {
+        const response = await fetch(API + '/domanda/' + currentQuestion.id, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json', 
@@ -160,11 +167,13 @@ function FlashCard() {
             difficolta: difficolta
           }),
         });
+
+        const data = await response.json();
   
         if (response.ok) {
           const data = await response.json();
         } else {
-          errorNoty("Errore durante il salvataggio")
+          errorNoty(data.message);
           throw new Error('Errore nel salvataggio');
         }
       } catch (err) {
@@ -220,10 +229,10 @@ function FlashCard() {
         transition={{ duration: 0.7 }}>
         <div className='px-4 pt-3 px-lg-0 divPrincipale'>
           <div className='d-flex gap-1 align-items-center'>
-            <IconButton onClick={() => {navigate("/flashcard")}}>
+            <IconButton onClick={() => {navigate(-1)}}>
               <ArrowBackIosIcon style={{color: "black"}} />
             </IconButton>
-            <h1 onClick={() => {navigate("/flashcard")}} className='mb-0 cursor-pointer'>FlashCard</h1>
+            <h1 onClick={() => {navigate(-1)}} className='mb-0 cursor-pointer'>FlashCard</h1>
           </div>
 
             <div className='mt-5 d-flex flex-column align-items-center justify-content-center'>

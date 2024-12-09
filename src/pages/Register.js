@@ -1,11 +1,13 @@
 import React, { useRef } from 'react';
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from 'react-redux';
+import { successNoty, errorNoty } from '../components/Notify';
 import { loginU } from '../redux/reducers/authSlice';
 
 function Register() {
   const dispatch = useDispatch();
   let navigate = useNavigate();
+  const API = process.env.REACT_APP_BACKEND;
 
   // Riferimenti ai campi del form
   const emailRef = useRef();
@@ -35,7 +37,7 @@ function Register() {
 
     // Effettua la richiesta POST
     try {
-      const response = await fetch('http://localhost:3001/auth/register', {
+      const response = await fetch(API + '/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -43,16 +45,16 @@ function Register() {
         body: JSON.stringify(userData)
       });
 
-      const result = await response.json();
+      const data = await response.json();
 
       if (response.ok) {
-
-        //dispatch(loginU(result)); 
+        successNoty("Registrato Correttamente")
+        //dispatch(loginU(data)); 
         navigate("/login"); 
       } else {
-        // Gestisci gli errori
-        console.error('Errore nella registrazione:', result);
-        alert('Errore nella registrazione. Prova di nuovo.');
+        errorNoty(
+          data.message || "Errore durante la registrazione"
+        );
       }
     } catch (error) {
       console.error('Errore nella connessione:', error);

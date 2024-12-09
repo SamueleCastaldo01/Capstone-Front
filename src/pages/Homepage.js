@@ -4,6 +4,7 @@ import 'react-quill/dist/quill.snow.css'; // Stili predefiniti
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from '@mui/material/Button';
+import { successNoty, errorNoty } from '../components/Notify';
 import { motion } from 'framer-motion';
 
 function Homepage() {
@@ -14,6 +15,8 @@ function Homepage() {
   const [error, setError] = useState(null); 
   const [open, setOpen] = React.useState(false);
   const [argomento, setArgomento] = useState(null);
+  const API = process.env.REACT_APP_BACKEND;
+
 
   const token = localStorage.getItem('authToken');
   const argomentoId = 103;
@@ -28,7 +31,7 @@ function Homepage() {
 
   const handleSave = async () => {
     try {
-      const response = await fetch('http://localhost:3001/argomento/103', {
+      const response = await fetch(API + '/argomento/103', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json', 
@@ -41,11 +44,13 @@ function Homepage() {
         }),
       });
 
-      if (response.ok) {
-        const data = await response.json();
+      const data = await response.json();
+
+      if (response.ok) { 
         console.log('Dati salvati:', data);
         alert('Contenuto salvato con successo!');
       } else {
+        errorNoty(data.message);
         throw new Error('Errore nel salvataggio');
       }
     } catch (err) {
@@ -55,35 +60,38 @@ function Homepage() {
     }
   };
 
-    // Funzione per la GET request
+ 
     const fetchArgomento = async (id) => {  
       try {
-        const response = await fetch(`http://localhost:3001/argomento/${id}`, {
-          method: 'GET', // Metodo GET per recuperare
+        const response = await fetch(API + `/argomento/${id}`, {
+          method: 'GET', 
           headers: {
-            'Authorization': `Bearer ${token}`, // Bearer Token per l'autenticazione
-            'Content-Type': 'application/json', // Tipo di contenuto JSON
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json', 
           },
         });
+
+        const data = await response.json();
   
-        // Gestione della risposta
+      
         if (response.ok) {
-          const data = await response.json();
-          setArgomento(data); // Imposta i dati nell'argomento
-          setValue(data.contenuto); // Imposta il contenuto nel value per l'editor
-          setLoading(false); // Imposta lo stato di loading a false
+          
+          setArgomento(data); 
+          setValue(data.contenuto); 
+          setLoading(false);
         } else {
+          errorNoty(data.message);
           throw new Error('Errore nel recupero dei dati');
         }
       } catch (err) {
         console.error('Errore:', err);
-        setError(err.message); // Mostra l'errore
-        setLoading(false); // Imposta lo stato di loading a false
+        setError(err.message); 
+        setLoading(false); 
       }
     };
 
     useEffect(() => {
-      fetchArgomento(argomentoId); // Passa l'ID dell'argomento
+      fetchArgomento(argomentoId); 
     }, [argomentoId]);
 
   return (
@@ -104,7 +112,7 @@ function Homepage() {
                 <h2 style={{fontSize: "100px"}}>+</h2>
               </div>
             </div>
-            <div className='homeMaterie' onClick={() => {navigate("/addcorso")}}>
+            <div className='homeMaterie' onClick={() => {navigate("/imieiappunti")}}>
               <h2>I miei appunti</h2>
               <div style={{paddingTop: "250px"}}>
               </div>

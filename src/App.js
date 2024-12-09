@@ -16,6 +16,7 @@ import { tutti, supa } from './components/utenti';
 import { useDispatch, useSelector } from "react-redux";
 import { loginU, logoutU } from './redux/reducers/authSlice'; 
 import { loginUser, logoutUser } from './redux/reducers/userAuthSlice';
+import { successNoty, errorNoty } from "./components/Notify";
 import { Button, Snackbar } from '@mui/material'; // Importa Snackbar e Button
 
 // Styled BottomNavigationAction
@@ -118,6 +119,7 @@ function AppContent({ signUserOut, matches }) {
   const location = useLocation(); // Usa useLocation per ottenere l'URL corrente
   const [corsi, setCorsi] = useState([]); 
   const [loadingcorsi, setLoadingcorsi] = useState(true); 
+  const API = process.env.REACT_APP_BACKEND;
   const [loading, setLoading] = useState({});
   const token = localStorage.getItem('authToken');
   const [argomenti, setArgomenti] = useState(() => {
@@ -131,7 +133,7 @@ function AppContent({ signUserOut, matches }) {
 
   const fetchCorso = async () => {  
     try {
-      const response = await fetch(`http://localhost:3001/corso/me`, {
+      const response = await fetch(API  + `/corso/me`, {
         method: 'GET', 
         headers: {
           'Authorization': `Bearer ${token}`, 
@@ -139,12 +141,17 @@ function AppContent({ signUserOut, matches }) {
         },
       });
 
+      const data = await response.json();
+
       // Gestione della risposta
       if (response.ok) {
-        const data = await response.json();
+        
         setCorsi(data);
         setLoadingcorsi(false); 
       } else {
+        errorNoty(
+          data.message || "Errore durante la registrazione"
+        );
         throw new Error('Errore nel recupero dei dati');
       }
     } catch (err) {
@@ -156,7 +163,7 @@ function AppContent({ signUserOut, matches }) {
 
   const fetchArgomentiPerCorso = async (idCorso) => {
     try {
-      const response = await fetch(`http://localhost:3001/argomento/corso/${idCorso}`, {
+      const response = await fetch(API + `/argomento/corso/${idCorso}`, {
         headers: {
           'Authorization': `Bearer ${token}`, 
           'Content-Type': 'application/json',

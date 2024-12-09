@@ -33,6 +33,8 @@ function Corso({fetchArgomentiPerCorso, fetchCorsoPrp}) {
   const [flagDomande, setFlagDomande] = useState(true); 
   const [deleteNomeCorso, setDeleteNomeCorso] = useState(""); 
   const [nomeCorso, setNomeCorso] = useState(null); 
+  const API = process.env.REACT_APP_BACKEND;
+
 
   const [titoloArgomento, setTitoloArgomento] = useState(""); 
 
@@ -66,17 +68,18 @@ function Corso({fetchArgomentiPerCorso, fetchCorsoPrp}) {
     // Funzione per la GET request
     const fetchCorso = async (id) => {  
       try {
-        const response = await fetch(`http://localhost:3001/corso/${id}`, {
+        const response = await fetch(API + `/corso/${id}`, {
           method: 'GET', // Metodo GET per recuperare
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json', 
           },
         });
+
+        const data = await response.json();
   
         // Gestione della risposta
         if (response.ok) {
-          const data = await response.json();
           setCorso(data);
           setNomeCorso(data.nomeCorso)
           setColoreCopertina(data.coloreCopertina)
@@ -85,6 +88,7 @@ function Corso({fetchArgomentiPerCorso, fetchCorsoPrp}) {
           fetchArgomentiPerCorso(id);
           fetchDomandePerCorso(id, 0);
         } else {
+          errorNoty(data.message);
           throw new Error('Errore nel recupero dei dati');
         }
       } catch (err) {
@@ -96,7 +100,7 @@ function Corso({fetchArgomentiPerCorso, fetchCorsoPrp}) {
 
     const fetchArgomentiPerCorsoMe = async (idCorso) => {
         try {
-          const response = await fetch(`http://localhost:3001/argomento/corso/${idCorso}`, {
+          const response = await fetch(API + `/argomento/corso/${idCorso}`, {
             headers: {
               'Authorization': `Bearer ${token}`, 
               'Content-Type': 'application/json',
@@ -118,7 +122,7 @@ function Corso({fetchArgomentiPerCorso, fetchCorsoPrp}) {
         console.log(select)
       }
       try {
-        const response = await fetch("http://localhost:3001/domanda/" +str, {
+        const response = await fetch(API + "/domanda/" +str, {
           headers: {
             'Authorization': `Bearer ${token}`, 
             'Content-Type': 'application/json',
@@ -139,7 +143,7 @@ function Corso({fetchArgomentiPerCorso, fetchCorsoPrp}) {
     //------------------------------------------------------------------------------------------
     const handleSave = async () => {
       try {
-        const response = await fetch('http://localhost:3001/corso/' + id, {
+        const response = await fetch(API + '/corso/' + id, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json', 
@@ -150,13 +154,15 @@ function Corso({fetchArgomentiPerCorso, fetchCorsoPrp}) {
             coloreCopertina: coloreCopertina, 
           }),
         });
+
+        const data = await response.json();
   
         if (response.ok) {
-          const data = await response.json();
+          
           successNoty("Materia aggiornata :)")
           fetchCorsoPrp();
         } else {
-          errorNoty("Errore durante il salvataggio")
+          errorNoty(data.message)
           throw new Error('Errore nel salvataggio');
         }
       } catch (err) {
@@ -169,7 +175,7 @@ function Corso({fetchArgomentiPerCorso, fetchCorsoPrp}) {
         //------------------------------------------------------------------------------------------
       const handleSaveArgomento = async () => {
         try {
-          const response = await fetch('http://localhost:3001/argomento', {
+          const response = await fetch(API + '/argomento', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json', 
@@ -181,14 +187,16 @@ function Corso({fetchArgomentiPerCorso, fetchCorsoPrp}) {
               contenuto: "<h1>" + titoloArgomento + "</h1>"
             }),
           });
+
+          const data = await response.json();
     
           if (response.ok) {
-            const data = await response.json();
             successNoty("Argomento creato :)")
             fetchArgomentiPerCorsoMe(id)
             fetchArgomentiPerCorso(id);
             setTitoloArgomento("");
           } else {
+            errorNoty(data.message);
             throw new Error('Errore nel salvataggio');
           }
         } catch (err) {
@@ -200,7 +208,7 @@ function Corso({fetchArgomentiPerCorso, fetchCorsoPrp}) {
       //------------------------------------------------------------------------------------------
       const handleSaveDomanda = async () => {
         try {
-          const response = await fetch('http://localhost:3001/domanda', {
+          const response = await fetch(API + '/domanda', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json', 
@@ -213,14 +221,16 @@ function Corso({fetchArgomentiPerCorso, fetchCorsoPrp}) {
 
             }),
           });
+
+          const data = await response.json();
     
           if (response.ok) {
-            const data = await response.json();
-            successNoty("Argomento creato :)")
+            successNoty("Domanda Creata :)")
             setDomanda("");
             setDomandaCorretta("");
             fetchDomandePerCorso(id, 0)
           } else {
+            errorNoty(data.message);
             throw new Error('Errore nel salvataggio');
           }
         } catch (err) {
@@ -232,7 +242,7 @@ function Corso({fetchArgomentiPerCorso, fetchCorsoPrp}) {
       //delete--------------------------------------------------------------
       const deleteCorso = async (id) => {  
         try {
-          const response = await fetch(`http://localhost:3001/corso/${id}`, {
+          const response = await fetch(API + `/corso/${id}`, {
             method: 'DELETE',
             headers: {
               'Authorization': `Bearer ${token}`,

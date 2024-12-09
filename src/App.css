@@ -17,7 +17,9 @@ body {
   margin-bottom: 0px;
 }
 
-
+.bottom-45 {
+  bottom: 45%
+}
 
 :root {
   --light: #eee;
