@@ -12,6 +12,7 @@ import TextField from '@mui/material/TextField';
 import SaveIcon from '@mui/icons-material/Save';
 import PsychologyAltIcon from '@mui/icons-material/PsychologyAlt';
 import { motion } from 'framer-motion';
+import CircularProgress from '@mui/material/CircularProgress';
 
 
 function Argomento({fetchArgomentiPerCorso}) {
@@ -22,6 +23,7 @@ function Argomento({fetchArgomentiPerCorso}) {
   const [idCorso, setIdCorso] = useState('');
   const [titoloArgomento, setTitoloArgomento] = useState(''); 
   const [nomeCorso, setNomeCorso] = useState(''); 
+  const [loadingSave, setLoadingSave] = useState(false);
   const API = process.env.REACT_APP_BACKEND;
 
 
@@ -69,6 +71,7 @@ function Argomento({fetchArgomentiPerCorso}) {
   };
 
   const handleSave = async () => {
+    setLoadingSave(true);
     try {
       const response = await fetch(API + '/argomento/' + id, {
         method: 'PUT',
@@ -86,9 +89,11 @@ function Argomento({fetchArgomentiPerCorso}) {
       const data = await response.json();
 
       if (response.ok) {
-        successNoty("Dati salvati :)")
+        setLoadingSave(false);
+        successNoty("Capitolo Salvato :)")
         fetchArgomentiPerCorso(idCorso);
       } else {
+        setLoadingSave(false);
         errorNoty(data.message);
         throw new Error('Errore nel salvataggio');
       }
@@ -134,6 +139,22 @@ function Argomento({fetchArgomentiPerCorso}) {
       fetchArgomento(id); 
     }, [id]);
 
+
+
+    useEffect(() => {
+      const handleKeyDown = (e) => {
+        if (e.ctrlKey && e.key === 's') {
+          e.preventDefault();
+          handleSave();
+        }
+      };
+    
+      window.addEventListener('keydown', handleKeyDown);
+    
+      return () => {
+        window.removeEventListener('keydown', handleKeyDown);
+      };
+    }, [titoloArgomento]);
 
     
 //delete--------------------------------------------
@@ -192,7 +213,8 @@ const handleDelete = () => {
                   <Button variant="contained" color="primary" onClick={() => {navigate("/flashcard/" + id + "/0")}} startIcon={<PsychologyAltIcon/>}>
                       FlashCard
                   </Button>
-                  <Button variant="contained" color="primary" onClick={handleSave} startIcon={<SaveIcon/>}>
+                  <Button variant="contained" color="primary" onClick={() => {handleSave()}}
+                    startIcon={loadingSave ? <CircularProgress size={20} color="inherit" /> : <SaveIcon />}>
                       Salva
                   </Button>
                 </div>
