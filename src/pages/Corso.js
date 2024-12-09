@@ -20,13 +20,17 @@ import Autocomplete from '@mui/material/Autocomplete';
 import Select from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
+import CircularProgress from '@mui/material/CircularProgress';
 import FormControl from '@mui/material/FormControl';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 function Corso({fetchArgomentiPerCorso, fetchCorsoPrp}) {
 
   const [flagCont, setFlagCont] = React.useState(false);
   const [value, setValue] = useState('');
   const [loading, setLoading] = useState(true); // Per gestire il loading
+  const [loadingArgomento, setLoadingArgomento] = useState(true);
+  const [loadingDomande, setLoadingDomande] = useState(true);
   const [error, setError] = useState(null); 
   const [flagDelete, setFlagDelete] = useState(false); 
   const [flagArgomenti, setFlagArgomenti] = useState(true); 
@@ -99,6 +103,7 @@ function Corso({fetchArgomentiPerCorso, fetchCorsoPrp}) {
     };
 
     const fetchArgomentiPerCorsoMe = async (idCorso) => {
+      setLoadingArgomento(true)
         try {
           const response = await fetch(API + `/argomento/corso/${idCorso}`, {
             headers: {
@@ -108,12 +113,14 @@ function Corso({fetchArgomentiPerCorso, fetchCorsoPrp}) {
           });
           const data = await response.json();
           setArgomenti(data);
+          setLoadingArgomento(false)
         } catch (err) {
             
         }
       };
 
     const fetchDomandePerCorso = async (idCorso, select) => {
+      setLoadingDomande(true);
       let str= "";
       if(select == 0) {
         str = "corso/" + idCorso
@@ -130,6 +137,8 @@ function Corso({fetchArgomentiPerCorso, fetchCorsoPrp}) {
         });
         const data = await response.json();
         setDomande(data);
+        console.log("dovrebbe funzionare")
+        setLoadingDomande(false);
       } catch (err) {
           
       }
@@ -265,6 +274,31 @@ function Corso({fetchArgomentiPerCorso, fetchCorsoPrp}) {
         }
       };
 
+  //-----------------------------------------------------------------------
+      const handleDeleteDomanda = async (idDomanda) => {  
+        try {
+          const response = await fetch(API + `/domanda/${idDomanda}`, {
+            method: 'DELETE',
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json', 
+            },
+          });
+    
+          // Gestione della risposta
+          if (response.ok) {
+              successNoty("Domanda Eliminata")
+              fetchDomandePerCorso(id, selectFilter)
+          } else {
+            throw new Error('Errore nel recupero dei dati');
+          }
+        } catch (err) {
+          console.error('Errore:', err);
+          setError(err.message); 
+          setLoading(false);
+        }
+      };
+
 
       const handleDelete = () => {
         if(!flagDelete) {
@@ -352,6 +386,7 @@ function Corso({fetchArgomentiPerCorso, fetchCorsoPrp}) {
                           )
                         })
                         }
+                       {loadingArgomento &&  <CircularProgress /> }
                       </div>
                       <div className='pt-3' >
                         <div>
@@ -410,17 +445,23 @@ function Corso({fetchArgomentiPerCorso, fetchCorsoPrp}) {
                       {domande.map((domanda) => {
                           return (
                             <div className=' mb-3' key={domanda.id}>
-                              <div className='d-flex align-items-center selctedDiv'>
-                                <IconButton className='p-0'><QuizIcon style={{color: "black"}}/></IconButton>
-                                <h5  className='mb-0 '>{domanda.domanda}</h5>
+                              <div className='d-flex gap-2'>
+                                <div className='d-flex align-items-center selctedDiv'>
+                                  <IconButton className='p-0'><QuizIcon style={{color: "black"}}/></IconButton>
+                                  <h5  className='mb-0 '>{domanda.domanda}</h5>
+                                </div>
+                                <div className='selctedDiv'>
+                                  <IconButton className='p-0' onClick={() => {handleDeleteDomanda(domanda.id)}}><DeleteIcon style={{color: "red"}}/></IconButton>
+                                </div>
                               </div>
+                          
                               <p className='mb-0 ps-3'><b style={{color: "#008f39"}}>Risposta corretta:</b> {domanda.rispostaDomanda}</p>
                             </div>
                           )
                         })
                       }
                     
-                    
+                    {loadingDomande &&  <CircularProgress /> }
                       <h6 className='mt-4'>Aggiungi una Domanda per questa Materia</h6>
                       <div className='d-flex flex-column ps-1 gap-4'>
                       <TextField 

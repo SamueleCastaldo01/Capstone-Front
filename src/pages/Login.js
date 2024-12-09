@@ -1,12 +1,14 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from 'react-redux';
+import CircularProgress from '@mui/material/CircularProgress';
 import { loginU } from '../redux/reducers/authSlice';
 import { successNoty, errorNoty } from '../components/Notify';
 
 function Login() {
   const dispatch = useDispatch();
   let navigate = useNavigate();  
+  const [loading, setLoading] = useState(false);
   const API = process.env.REACT_APP_BACKEND;
 
 
@@ -15,6 +17,7 @@ function Login() {
 
   // Funzione di login
   async function handelLogin () {
+    setLoading(true);
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
 
@@ -41,6 +44,7 @@ function Login() {
         localStorage.setItem("isAuth", true);
         dispatch(loginU(data.token));  // Usa il tuo reducer per il login, se necessario
         successNoty("Credenziali Valide")
+        setLoading(false);
         navigate("/");
       } else {
         errorNoty(
@@ -88,6 +92,8 @@ function Login() {
                           <label className="form-label" htmlFor="typePasswordX"> Password</label>
                           <input ref={passwordRef} type="password" id="typePasswordX" className="form-control form-control-lg" placeholder="Inserisci password"/>
                         </div>
+
+                        {loading && <CircularProgress />}
 
                         <p className="small mb-5 pb-lg-2" onClick={forgotPassword}>
                           <a className="text-white-50">Forgot password?</a>
