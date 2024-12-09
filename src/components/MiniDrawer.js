@@ -364,7 +364,6 @@ useEffect(() => {
                 onClose={handleClose}
               >
                 <MenuItem onClick={() => {handleClose(); navigate("/myaccount")}}>My account</MenuItem>
-                <MenuItem onClick={ () => {handleClose(); navigate("/login")}}>LogIn</MenuItem>
                 <MenuItem onClick={ () => {signUserOut(); handleClose(); localStorage.setItem(false,"isAuth"); setIsAuth(false); navigate("/login")}}>LogOut</MenuItem> 
 
                 
@@ -428,18 +427,7 @@ useEffect(() => {
               />
             </ListItemButton>
           </ListItemCus>
-          <ListItemCus>
-          <ListItemButton style={{ borderRadius: "10px" }} >
-              <ListItemText
-                onClick={() => {navigate(`/`);}}
-                primary={"Mappa Concettuale"}
-                primaryTypographyProps={{ fontSize: '18px',
-            
-                 }}
-                sx={{ opacity: 1 }}
-              />
-            </ListItemButton>
-          </ListItemCus>
+
   
 
 

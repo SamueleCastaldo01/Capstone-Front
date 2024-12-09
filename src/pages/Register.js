@@ -63,20 +63,21 @@ function Register() {
   }
 
   return (
-    <div className='Page'>
-      <div className="ciao container">
-        <section className="gradient-custom">
-          <div className="container py-1">
-            <div className="row d-flex justify-content-center align-items-center h-70">
-              <div className="col-12 col-md-8 col-lg-6 col-xl-5">
-                <div className="card bg-dark text-white" style={{borderRadius: "2rem"}}>
-                  <div className="card-body p-5 text-center">
+    <div className='w-100'>
+      <div className="w-100 ps-4 ps-md-0">
+        <section className="w-100">
+          <div className=" py-1 w-100">
+            <div className="row d-flex justify-content-center align-items-center h-70 w-100">
+              <div className="col-12 col-md-8  ">
+                <div className="card gradientNice p-3 text-black" style={{borderRadius: "2rem"}}>
+                  <div className="card-body bg-white p-3 px-5 text-center" style={{borderRadius: "2rem"}}>
 
-                    <div className="mb-md-5 mt-md-4 pb-5">
+                    <div className="mb-md-4 mt-md-4 pb-5">
 
-                      <h2 className="fw-bold mb-2 text-uppercase">EpicEnergyService</h2>
                       <h2 className="fw-bold mb-2 text-uppercase">Register</h2>
-                      <p className="text-white-50 mb-5">Please enter your email and password</p>
+                      <img style={{width: "200px"}} src='logo.jpg'/>
+                     
+                      <p className="text-black-50 mb-5">Please enter your email and password</p>
 
                       {/* Campo per username */}
                       <div className="form-outline form-white mb-4">
@@ -93,7 +94,7 @@ function Register() {
                       {/* Campo per password */}
                       <div className="form-outline form-white mb-4">
                         <label className="form-label" htmlFor="typePasswordX">Password</label>
-                        <input ref={passwordRef} type="text" id="typePasswordX" className="form-control form-control-lg" placeholder="Inserisci password" />
+                        <input ref={passwordRef} type="password" id="typePasswordX" className="form-control form-control-lg" placeholder="Inserisci password" />
                       </div>
 
                       {/* Campo per nome */}
@@ -114,11 +115,11 @@ function Register() {
                         <input ref={avatarRef} type="text" id="typeAvatarX" className="form-control form-control-lg" placeholder="Inserisci URL avatar" />
                       </div>
 
-                      <button className="btn btn-outline-light btn-lg px-5" type="submit" onClick={handleRegister}>Register</button>
+                      <button className="btn gradientNice text-white btn-lg px-5" type="submit" onClick={handleRegister}>Register</button>
                     </div>
 
                     <div>
-                      <p className="mb-0">Hai già un account? <a style={{ cursor: 'pointer' }} onClick={() => {navigate("/login")}} className="text-white-50 fw-bold">Accedi</a></p>
+                      <p className="mb-0">Hai già un account? <a style={{ cursor: 'pointer' }} onClick={() => {navigate("/login")}} className="text-black-50 fw-bold">Accedi</a></p>
                     </div>
 
                   </div>

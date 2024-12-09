@@ -29,10 +29,6 @@ function FlashCard() {
   const [flagVedi, setFlagVedi] = useState(false);
   const [currentQuestion, setCurrentQuestion] = useState([])
 
-  //eliminazione
-  const [flagDelete, setFlagDelete] = useState(false); 
-  const [deleteTitoloCroso, setDeleteTitoloCorso] = useState(""); 
-
   const [loading, setLoading] = useState(true); // Per gestire il loading
   const [error, setError] = useState(null); 
   const [open, setOpen] = React.useState(false);
@@ -168,12 +164,9 @@ function FlashCard() {
           }),
         });
 
-        const data = await response.json();
   
         if (response.ok) {
-          const data = await response.json();
         } else {
-          errorNoty(data.message);
           throw new Error('Errore nel salvataggio');
         }
       } catch (err) {
@@ -196,14 +189,27 @@ function FlashCard() {
         //qui devo fare un ulteriore controllo e vedere questa domanda può essere visualizzata, altrimenti passa alla prossima
         //fin quando non trova una disponibile, quindi cmq devo fare una sorta di ciclo, un do while
         while(!flagCiclo) {
+          
           if (tentativo <= domande.length - 1) { //prima di tutto deve fare il controllo che non sia superato l'array
+          console.log(tentativo)
           const dataModificaDifficolta = domande[tentativo].dataModificaDifficolta;
           const ritardoMinuti = domande[tentativo].ritardo; 
-          const ritardoMillisecondi = ritardoMinuti * 60 * 1000;
+          console.log("Ritardo: " + domande[tentativo].ritardo)
+          console.log("Data Modifica: "  + dataModificaDifficolta) 
+
+          const ritardoMillisecondi = (ritardoMinuti * 60 * 1000) + (1 * 60 * 60 * 1000);
           const dataModificaMillisecondi = new Date(dataModificaDifficolta).getTime();
+
           const nuovaDataTimestamp  = dataModificaMillisecondi + ritardoMillisecondi;
+          const dataISORitard = new Date(nuovaDataTimestamp).toISOString();
           const dataAttuale = Date.now(); 
+          
+          const dataISO = new Date(dataAttuale).toISOString(); // Converte in formato ISO 8601
+          console.log("Data Attuale: " + dataISO);
+          console.log("data modifica + ritardo: " + dataISORitard);
+
           if(dataAttuale > nuovaDataTimestamp) {  //in questo caso vuol dire che lo posso visualizzare
+            console.log("entrato data: Da "+ dataAttuale + " > DmR " + nuovaDataTimestamp)
             flagCiclo = true;
           } else {   //altrimenti deve passare al successivo attraverso il ciclo
             tentativo = tentativo + 1

@@ -63,18 +63,19 @@ function Login() {
 
   return (
     <>
-      <div className='Page'>  
-        <div className="ciao container">
-          <section className="gradient-custom">
-            <div className="container py-1">
-              <div className="row d-flex justify-content-center align-items-center h-70">
-                <div className="col-12 col-md-8 col-lg-6 col-xl-5">
-                  <div className="card bg-dark text-white" style={{borderRadius: "2rem"}}>
-                    <div className="card-body p-5 text-center">
+      <div className='w-100'>  
+        <div className="w-100">
+          <section className="w-100">
+            <div className="w-100 py-1">
+              <div className="row d-flex justify-content-center align-items-center h-70 w-100">
+                <div className="col-12 col-md-8">
+                  <div className="card gradientNice p-3 text-black" style={{borderRadius: "2rem"}}>
+                    <div className="card-body bg-white p-3 px-5 text-center" style={{borderRadius: "2rem"}}>
 
                       <div className="mb-md-5 mt-md-4 pb-5">
 
                         <h2 className="fw-bold mb-2 text-uppercase">Login</h2>
+                        <img src='logo.jpg' style={{width: "200px"}}/>
                         <h2 className="fw-bold mb-2 text-uppercase"></h2>
                         <p className="text-white-50 mb-5">Please enter your email and password</p>
 
@@ -92,12 +93,12 @@ function Login() {
                           <a className="text-white-50">Forgot password?</a>
                         </p>
 
-                        <button className="btn btn-outline-light btn-lg px-5" type="submit" onClick={handelLogin}>Login</button>
+                        <button className="btn gradientNice text-white btn-lg px-5" type="submit" onClick={handelLogin}>Login</button>
 
                       </div>
 
                       <div>
-                        <p className="mb-0">Non hai un account? <a style={{ cursor: 'pointer' }} onClick={() => {navigate("/register")}} className="text-white-50 fw-bold">Registrati</a></p>
+                        <p className="mb-0">Non hai un account? <a style={{ cursor: 'pointer' }} onClick={() => {navigate("/register")}} className="text-black-50 fw-bold">Registrati</a></p>
                       </div>
 
                     </div>
