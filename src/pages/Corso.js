@@ -355,7 +355,7 @@ function Corso({fetchArgomentiPerCorso, fetchCorsoPrp}) {
             </div>
 
             <div className='mt-5 d-flex justify-content-between'>
-              <Button onClick={() => {navigate("/flashcard/0/" + id)}} style={{width: "15%", height: "60px"}} variant="contained" startIcon={<PsychologyAltIcon/>}>FlashCard</Button>
+              <Button onClick={() => {navigate("/flashcard/0/" + id)}} style={{width: 150, height: "60px"}} variant="contained" startIcon={<PsychologyAltIcon/>}>FlashCard</Button>
             </div>
             
                {/***I miei argomenti ++++++++++++++++++++++++++++++++++++++++++++++++++ */}
