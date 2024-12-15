@@ -36,7 +36,7 @@ La barra di navigazione laterale offre un menu con le seguenti sezioni:
 - **React.js**: Framework per la creazione dell'interfaccia utente.
 - **React Router**: Gestione della navigazione tra le pagine.
 - **Redux**: Gestione dello stato globale.
-- **Firebase**: Backend per l'autenticazione e il salvataggio dei dati.
+- **Spring**: Backend per l'autenticazione e il salvataggio dei dati.
 
 ## Come Iniziare
 
