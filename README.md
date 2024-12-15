@@ -36,7 +36,13 @@ La barra di navigazione laterale offre un menu con le seguenti sezioni:
 - **React.js**: Framework per la creazione dell'interfaccia utente.
 - **React Router**: Gestione della navigazione tra le pagine.
 - **Redux**: Gestione dello stato globale.
-- **Spring**: Backend per l'autenticazione e il salvataggio dei dati. https://github.com/SamueleCastaldo01/Capstone-Back
+- **Spring**: Backend per l'autenticazione e il salvataggio dei dati. [Veyro - Backend (Java Spring)](https://github.com/SamueleCastaldo01/Capstone-Back)
+
+## Diagramma del Database
+
+Per visualizzare il diagramma SQL del database utilizzato nel progetto, puoi consultare il diagramma di **PostgreSQL** qui:
+
+[Diagramma SQL di PostgreSQL](https://drawsql.app/teams/io-37/diagrams/cap-stone)
 
 ## Come Iniziare
 
